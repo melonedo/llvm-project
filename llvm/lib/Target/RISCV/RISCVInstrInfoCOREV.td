@@ -133,6 +133,133 @@ let Predicates = [HasExtXCoreVMac], hasSideEffects = 0, mayLoad = 0, mayStore = 
                     Sched<[]>;
 } // Predicates = [HasExtXCoreVMac], hasSideEffects = 0, mayLoad = 0, mayStore = 0, Constraints = "$rd = $rd_wb"
 
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in
+class SIMDALU_rr<bits<7> funct7, bits<3> funct3, string opcodestr>
+    : RVInstSIMDR<funct7, funct3, OPC_CUSTOM3, (outs GPR:$rd),
+              (ins GPR:$rs1, GPR:$rs2), opcodestr, "$rd, $rs1, $rs2"> {
+}
+
+let Predicates = [HasExtXCoreVSIMD], hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
+  def CV_ADD_H :    SIMDALU_rr<0b0000000, 0b000, "cv.add.h">;
+  def CV_ADD_B :    SIMDALU_rr<0b0000000, 0b001, "cv.add.b">;
+  def CV_ADD_SC_H : SIMDALU_rr<0b0000000, 0b010, "cv.add.sc.h">;
+  def CV_ADD_SC_B : SIMDALU_rr<0b0000000, 0b011, "cv.add.sc.b">;
+
+  def CV_SUB_H :    SIMDALU_rr<0b0000100, 0b000, "cv.sub.h">;
+  def CV_SUB_B :    SIMDALU_rr<0b0000100, 0b001, "cv.sub.b">;
+  def CV_SUB_SC_H : SIMDALU_rr<0b0000100, 0b100, "cv.sub.sc.h">;
+  def CV_SUB_SC_B : SIMDALU_rr<0b0000100, 0b101, "cv.sub.sc.b">;
+
+  def CV_AVG_H :    SIMDALU_rr<0b0001000, 0b000, "cv.avg.h">;
+  def CV_AVG_B :    SIMDALU_rr<0b0001000, 0b001, "cv.avg.b">;
+  def CV_AVG_SC_H : SIMDALU_rr<0b0001000, 0b100, "cv.avg.sc.h">;
+  def CV_AVG_SC_B : SIMDALU_rr<0b0001000, 0b101, "cv.avg.sc.b">;
+
+  def CV_AVGU_H :    SIMDALU_rr<0b0001100, 0b000, "cv.avgu.h">;
+  def CV_AVGU_B :    SIMDALU_rr<0b0001100, 0b001, "cv.avgu.b">;
+  def CV_AVGU_SC_H : SIMDALU_rr<0b0001100, 0b100, "cv.avgu.sc.h">;
+  def CV_AVGU_SC_B : SIMDALU_rr<0b0001100, 0b101, "cv.avgu.sc.b">;
+
+  def CV_MIN_H :    SIMDALU_rr<0b0010000, 0b000, "cv.min.h">;
+  def CV_MIN_B :    SIMDALU_rr<0b0010000, 0b001, "cv.min.b">;
+  def CV_MIN_SC_H : SIMDALU_rr<0b0010000, 0b100, "cv.min.sc.h">;
+  def CV_MIN_SC_B : SIMDALU_rr<0b0010000, 0b101, "cv.min.sc.b">;
+
+  def CV_MINU_H :    SIMDALU_rr<0b0010100, 0b000, "cv.minu.h">;
+  def CV_MINU_B :    SIMDALU_rr<0b0010100, 0b001, "cv.minu.b">;
+  def CV_MINU_SC_H : SIMDALU_rr<0b0010100, 0b100, "cv.minu.sc.h">;
+  def CV_MINU_SC_B : SIMDALU_rr<0b0010100, 0b101, "cv.minu.sc.b">;
+
+  def CV_MAX_H :    SIMDALU_rr<0b0011000, 0b000, "cv.min.h">;
+  def CV_MAX_B :    SIMDALU_rr<0b0011000, 0b001, "cv.min.b">;
+  def CV_MAX_SC_H : SIMDALU_rr<0b0011000, 0b100, "cv.min.sc.h">;
+  def CV_MAX_SC_B : SIMDALU_rr<0b0011000, 0b101, "cv.min.sc.b">;
+
+  def CV_MAXU_H :    SIMDALU_rr<0b0011100, 0b000, "cv.mu.h">;
+  def CV_MAXU_B :    SIMDALU_rr<0b0011100, 0b001, "cv.minu.b">;
+  def CV_MAXU_SC_H : SIMDALU_rr<0b0011100, 0b100, "cv.minu.sc.h">;
+  def CV_MAXU_SC_B : SIMDALU_rr<0b0011100, 0b101, "cv.minu.sc.b">;  
+
+  def CV_SRL_H :    SIMDALU_rr<0b0100000, 0b000, "cv.srl.h">;
+  def CV_SRL_B :    SIMDALU_rr<0b0100000, 0b001, "cv.srl.b">;
+  def CV_SRL_SC_H : SIMDALU_rr<0b0100000, 0b100, "cv.srl.sc.h">;
+  def CV_SRL_SC_B : SIMDALU_rr<0b0100000, 0b101, "cv.srl.sc.b">;
+
+  def CV_SRA_H :    SIMDALU_rr<0b0100100, 0b000, "cv.sra.h">;
+  def CV_SRA_B :    SIMDALU_rr<0b0100100, 0b001, "cv.sra.b">;
+  def CV_SRA_SC_H : SIMDALU_rr<0b0100100, 0b100, "cv.sra.sc.h">;
+  def CV_SRA_SC_B : SIMDALU_rr<0b0100100, 0b101, "cv.sra.sc.b">;
+
+  def CV_SLL_H :    SIMDALU_rr<0b0101000, 0b000, "cv.sll.h">;
+  def CV_SLL_B :    SIMDALU_rr<0b0101000, 0b001, "cv.sll.b">;
+  def CV_SLL_SC_H : SIMDALU_rr<0b0101000, 0b100, "cv.sll.sc.h">;
+  def CV_SLL_SC_B : SIMDALU_rr<0b0101000, 0b101, "cv.sll.sc.b">;
+
+  def CV_OR_H :     SIMDALU_rr<0b0101100, 0b000, "cv.or.h">;
+  def CV_OR_B :     SIMDALU_rr<0b0101100, 0b001, "cv.or.b">;
+  def CV_OR_SC_H :  SIMDALU_rr<0b0101100, 0b100, "cv.or.sc.h">;
+  def CV_OR_SC_B :  SIMDALU_rr<0b0101100, 0b101, "cv.or.sc.b">;
+
+  def CV_XOR_H :    SIMDALU_rr<0b0110000, 0b000, "cv.xor.h">;
+  def CV_XOR_B :    SIMDALU_rr<0b0110000, 0b001, "cv.xor.b">;
+  def CV_XOR_SC_H : SIMDALU_rr<0b0110000, 0b100, "cv.xor.sc.h">;
+  def CV_XOR_SC_B : SIMDALU_rr<0b0110000, 0b101, "cv.xor.sc.b">; 
+ 
+  def CV_AND_H :    SIMDALU_rr<0b0110100, 0b000, "cv.and.h">;
+  def CV_AND_B :    SIMDALU_rr<0b0110100, 0b001, "cv.and.b">;
+  def CV_AND_SC_H : SIMDALU_rr<0b0110100, 0b100, "cv.and.sc.h">;
+  def CV_AND_SC_B : SIMDALU_rr<0b0110100, 0b101, "cv.and.sc.b">;
+
+  def CV_ABS_H :    SIMDALU_rr<0b0111000, 0b000, "cv.abs.h">;
+  def CV_ABS_B :    SIMDALU_rr<0b0111000, 0b001, "cv.abs.b">;
+    
+  def CV_DOTUP_H :    SIMDALU_rr<0b1000000, 0b000, "cv.dotup.h">;
+  def CV_DOTUP_B :    SIMDALU_rr<0b1000000, 0b001, "cv.dotup.b">;
+  def CV_DOTUP_SC_H : SIMDALU_rr<0b1000000, 0b100, "cv.dotup.sc.h">;
+  def CV_DOTUP_SC_B : SIMDALU_rr<0b1000000, 0b101, "cv.dotup.sc.b">;
+
+  def CV_DOTUSP_H :    SIMDALU_rr<0b1000100, 0b000, "cv.dotusp.h">;
+  def CV_DOTUSP_B :    SIMDALU_rr<0b1000100, 0b001, "cv.dotusp.b">;
+  def CV_DOTUSP_SC_H : SIMDALU_rr<0b1000100, 0b100, "cv.dotusp.sc.h">;
+  def CV_DOTUSP_SC_B : SIMDALU_rr<0b1000100, 0b101, "cv.dotusp.sc.b">;
+
+  def CV_DOTSP_H :    SIMDALU_rr<0b1001000, 0b000, "cv.dotsp.h">;
+  def CV_DOTSP_B :    SIMDALU_rr<0b1001000, 0b001, "cv.dotsp.b">;
+  def CV_DOTSP_SC_H : SIMDALU_rr<0b1001000, 0b100, "cv.dotsp.sc.h">;
+  def CV_DOTSP_SC_B : SIMDALU_rr<0b1001000, 0b101, "cv.dotsp.sc.b">;
+
+  def CV_SDOTUP_H :    SIMDALU_rr<0b1001100, 0b000, "cv.sdotup.h">;
+  def CV_SDOTUP_B :    SIMDALU_rr<0b1001100, 0b001, "cv.sdotup.b">;
+  def CV_SDOTUP_SC_H : SIMDALU_rr<0b1001100, 0b100, "cv.sdotup.sc.h">;
+  def CV_SDOTUP_SC_B : SIMDALU_rr<0b1001100, 0b101, "cv.sdotup.sc.b">;
+
+  def CV_SDOTUSP_H :    SIMDALU_rr<0b1010000, 0b000, "cv.sdotusp.h">;
+  def CV_SDOTUSP_B :    SIMDALU_rr<0b1010000, 0b001, "cv.sdotusp.b">;
+  def CV_SDOTUSP_SC_H : SIMDALU_rr<0b1010000, 0b100, "cv.sdotusp.sc.h">;
+  def CV_SDOTUSP_SC_B : SIMDALU_rr<0b1010000, 0b101, "cv.sdotusp.sc.b">;
+
+  def CV_SDOTSP_H :    SIMDALU_rr<0b1010100, 0b000, "cv.sdotsp.h">;
+  def CV_SDOTSP_B :    SIMDALU_rr<0b1010100, 0b001, "cv.sdotsp.b">;
+  def CV_SDOTSP_SC_H : SIMDALU_rr<0b1010100, 0b100, "cv.sdotsp.sc.h">;
+  def CV_SDOTSP_SC_B : SIMDALU_rr<0b1010100, 0b101, "cv.sdotsp.sc.b">;   
+
+  def CV_SHUFFLE_H :    SIMDALU_rr<0b1100000, 0b000, "cv.shuffle.h">;
+  def CV_SHUFFLE_B :    SIMDALU_rr<0b1100000, 0b001, "cv.shuffle.b">;
+
+  def CV_SHUFFLE2_H :    SIMDALU_rr<0b1110000, 0b000, "cv.shuffle2.h">;
+  def CV_SHUFFLE2_B :    SIMDALU_rr<0b1110000, 0b001, "cv.shuffle2.b">;
+
+  def CV_PACK :      SIMDALU_rr<0b1111000, 0b000, "cv.pack">;
+  def CV_PACK_H :    SIMDALU_rr<0b1111001, 0b000, "cv.pack.h">;
+  
+  def CV_PACKHI_B :    SIMDALU_rr<0b1111101, 0b001, "cv.packhi.b">;
+  def CV_PACKLO_B :    SIMDALU_rr<0b1111100, 0b001, "cv.packlo.b">;
+  
+  
+  
+}
+
 let Predicates = [HasExtXCoreVMac], hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
   // Signed 16x16 bit muls
   def CV_MULS     : RVInstMac16<0b10, 0b000, (outs GPR:$rd), (ins GPR:$rs1, GPR:$rs2),
