@@ -778,6 +778,30 @@ let Predicates = [HasExtXCoreVMem] in {
 }
 
 //===----------------------------------------------------------------------===//
+// Patterns for SIMD operations
+//===----------------------------------------------------------------------===//
+
+multiclass PatSIMD_BinarySigned <string intr>{
+  def : PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr # "_h"), 
+                  !cast<RVInst>("CV_" # NAME # "_H")>;
+  def : PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr # "_b"), 
+                  !cast<RVInst>("CV_" # NAME # "_B")>;
+  def : PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr # "_sc_h"), 
+                  !cast<RVInst>("CV_" # NAME # "_SC_H")>;
+  def : PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr # "_sc_b"), 
+                  !cast<RVInst>("CV_" # NAME # "_SC_B")>;
+  def : PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr # "_sci_h"), 
+                  !cast<RVInst>("CV_" # NAME # "_SCI_H")>;
+  def : PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr # "_sci_b"), 
+                  !cast<RVInst>("CV_" # NAME # "_SCI_B")>;
+}
+
+let Predicates = [HasExtXCoreVSIMD] in {
+  // def : Pat<(int_riscv_cv_add_h GPR:$rs1, GPR:$rs2), (CV_ADD_H GPR:$rs1, GPR:$rs2)>;
+  defm ADD : PatSIMD_BinarySigned<"add">;
+}
+
+//===----------------------------------------------------------------------===//
 // Pseudo instructions and patterns for hardware loop generation
 //===----------------------------------------------------------------------===//
 

@@ -1582,3 +1582,25 @@ def int_riscv_sm4ed      : ScalarCryptoByteSelectAny;
 def int_riscv_sm3p0      : ScalarCryptoGprIntrinsicAny;
 def int_riscv_sm3p1      : ScalarCryptoGprIntrinsicAny;
 } // TargetPrefix = "riscv"
+
+class ScalarCoreVSimdGprGprIntrinsic
+    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
+                [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
+
+class ScalarCoreVSimdGprImmIntrinsic
+    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
+                [IntrNoMem, IntrWillReturn, IntrSpeculatable,
+                 ImmArg<ArgIndex<1>>]>;
+
+multiclass CoreVSimdBinary {
+  def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_ # NAME # _sc_h : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_ # NAME # _sc_b : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_ # NAME # _sci_h : ScalarCoreVSimdGprImmIntrinsic;
+  def int_riscv_cv_ # NAME # _sci_b : ScalarCoreVSimdGprImmIntrinsic;
+}
+
+let TargetPrefix = "riscv" in {
+defm add : CoreVSimdBinary;
+} // TargetPrefix = "riscv"
