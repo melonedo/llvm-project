@@ -1,0 +1,11 @@
+# RUN: llvm-mc -triple=riscv32 --mattr=+xcorevsimd -show-encoding %s \
+# RUN:        | FileCheck %s --check-prefixes=CHECK-ENCODING,CHECK-INSTR
+
+cv.extract.b t0, t1, -32
+# CHECK-INSTR: cv.extract.b t0, t1, -32
+# CHECK-ENCODING: [0xfb,0x12,0x03,0xb9]
+
+cv.extract.b a0, a1, 7
+# CHECK-INSTR: cv.extract.b a0, a1, 7
+# CHECK-ENCODING: [0x7b,0x95,0x35,0xba]
+
