@@ -103,6 +103,8 @@ static const RISCVSupportedExtension SupportedExtensions[] = {
     {"zicbop", RISCVExtensionVersion{1, 0}},
 
     {"svnapot", RISCVExtensionVersion{1, 0}},
+
+    {"xcorevsimd", RISCVExtensionVersion{0, 1}},
 };
 
 static const RISCVSupportedExtension SupportedExperimentalExtensions[] = {

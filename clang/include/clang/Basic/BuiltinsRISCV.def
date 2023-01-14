@@ -79,5 +79,9 @@ TARGET_BUILTIN(__builtin_riscv_sm4ks, "LiLiLiIUc", "nc", "zksed")
 TARGET_BUILTIN(__builtin_riscv_sm3p0, "LiLi", "nc", "zksh")
 TARGET_BUILTIN(__builtin_riscv_sm3p1, "LiLi", "nc", "zksh")
 
+// CoreV SIMD extension
+TARGET_BUILTIN(__builtin_corev_add_h, "ZiZiZi", "nc", "xcorevsimd")
+TARGET_BUILTIN(__builtin_corev_add_sc_h, "ZiZiZi", "nc", "xcorevsimd")
+
 #undef BUILTIN
 #undef TARGET_BUILTIN
