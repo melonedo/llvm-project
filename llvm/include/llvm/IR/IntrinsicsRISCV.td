@@ -1591,10 +1591,10 @@ class ScalarCoreVSimdGprGprIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 
+// Setting immarg will make LLVM classify the argument as TargetConstant,
+// preventing conditional selection.
 class ScalarCoreVSimdGprImmIntrinsic
-    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
-                [IntrNoMem, IntrWillReturn, IntrSpeculatable,
-                 ImmArg<ArgIndex<1>>]>;
+    : ScalarCoreVSimdGprGprIntrinsic;
 
 multiclass ScalarCoreVSimdGprIntrinsicHB {
   def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprIntrinsic;
@@ -1620,7 +1620,6 @@ multiclass ScalarCoreVSimdGprImmIntrinsicHB {
 multiclass CoreVSimdBinary {
   defm NAME : ScalarCoreVSimdGprGprIntrinsicHB;
   defm NAME # _sc : ScalarCoreVSimdGprGprIntrinsicHB;
-  defm NAME # _sci : ScalarCoreVSimdGprImmIntrinsicHB;
 }
 
 let TargetPrefix = "riscv" in {

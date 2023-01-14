@@ -785,9 +785,28 @@ class PatCorevGprGpr <string intr, string asm> :
   PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr), 
             !cast<RVInst>("CV_" # asm)>;
 
+class PatCorevGprImm <string intr, string asm> :
+  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+            !cast<RVInst>("CV_" # asm), simm6>;
+
+// TODO: define uimm6
+class PatCorevGprUImm <string intr, string asm> :
+  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+            !cast<RVInst>("CV_" # asm), simm6>;
+
 multiclass PatCorevGprGprHB <string intr> {
   def : PatCorevGprGpr<intr # "_h", NAME # "_H">;
   def : PatCorevGprGpr<intr # "_b", NAME # "_B">;
+}
+
+multiclass PatCorevGprImmHB <string intr> {
+  def : PatCorevGprImm<intr # "_h", NAME # "_H">;
+  def : PatCorevGprImm<intr # "_b", NAME # "_B">;
+}
+
+multiclass PatCorevGprUImmHB <string intr> {
+  def : PatCorevGprUImm<intr # "_h", NAME # "_H">;
+  def : PatCorevGprUImm<intr # "_b", NAME # "_B">;
 }
 
 multiclass PatCorevGprGprDiv <string intr> {
@@ -808,22 +827,27 @@ multiclass PatCorevGprHB <string intr> {
 multiclass PatCorevBinary <string intr> {
   defm NAME : PatCorevGprGprHB<intr>;
   defm NAME # "_SC" : PatCorevGprGprHB<intr # "_sc">;
-  defm NAME # "_SCI" : PatCorevGprGprHB<intr # "_sci">;
+  defm NAME # "_SCI" : PatCorevGprImmHB<intr # "_sc">;
+}
+
+multiclass PatCorevBinaryUnsigned <string intr> {
+  defm NAME : PatCorevGprGprHB<intr>;
+  defm NAME # "_SC" : PatCorevGprGprHB<intr # "_sc">;
+  defm NAME # "_SCI" : PatCorevGprUImmHB<intr # "_sc">;
 }
 
 let Predicates = [HasExtXCoreVSIMD] in {
-  // def : Pat<(int_riscv_cv_add_h GPR:$rs1, GPR:$rs2), (CV_ADD_H GPR:$rs1, GPR:$rs2)>;
   defm ADD :  PatCorevBinary<"add">;
   defm SUB :  PatCorevBinary<"sub">;
   defm AVG :  PatCorevBinary<"avg">;
   defm AVGU : PatCorevBinary<"avgu">;
   defm MIN :  PatCorevBinary<"min">;
-  defm MINU : PatCorevBinary<"minu">;
+  defm MINU : PatCorevBinaryUnsigned<"minu">;
   defm MAX :  PatCorevBinary<"max">;
-  defm MAXU : PatCorevBinary<"maxu">;
-  defm SRL :  PatCorevBinary<"srl">;
-  defm SRA :  PatCorevBinary<"sra">;
-  defm SLL :  PatCorevBinary<"sll">;
+  defm MAXU : PatCorevBinaryUnsigned<"maxu">;
+  defm SRL :  PatCorevBinaryUnsigned<"srl">;
+  defm SRA :  PatCorevBinaryUnsigned<"sra">;
+  defm SLL :  PatCorevBinaryUnsigned<"sll">;
   defm OR :   PatCorevBinary<"or">;
   defm XOR :  PatCorevBinary<"xor">;
   defm AND :  PatCorevBinary<"and">;
@@ -837,16 +861,16 @@ let Predicates = [HasExtXCoreVSIMD] in {
   defm SDOTUSP : PatCorevBinary<"sdotusp">;
   defm SDOTSP :  PatCorevBinary<"sdotsp">;
 
-  defm EXTRACT :  PatCorevGprGprHB<"extract">;
-  defm EXTRACTU : PatCorevGprGprHB<"extractu">;
-  defm INSERT :   PatCorevGprGprHB<"insert">;
+  defm EXTRACT :  PatCorevGprImmHB<"extract">;
+  defm EXTRACTU : PatCorevGprImmHB<"extractu">;
+  defm INSERT :   PatCorevGprImmHB<"insert">;
 
   defm SHUFFLE : PatCorevGprGprHB<"shuffle">;
-  def : PatCorevGprGpr<"shuffle_sci_h", "SHUFFLE_SCI_H">;
-  def : PatCorevGprGpr<"shuffleI0_sci_b", "SHUFFLEI0_SCI_B">;
-  def : PatCorevGprGpr<"shuffleI1_sci_b", "SHUFFLEI1_SCI_B">;
-  def : PatCorevGprGpr<"shuffleI2_sci_b", "SHUFFLEI2_SCI_B">;
-  def : PatCorevGprGpr<"shuffleI3_sci_b", "SHUFFLEI3_SCI_B">;
+  def : PatCorevGprImm<"shuffle_sci_h", "SHUFFLE_SCI_H">;
+  def : PatCorevGprImm<"shuffleI0_sci_b", "SHUFFLEI0_SCI_B">;
+  def : PatCorevGprImm<"shuffleI1_sci_b", "SHUFFLEI1_SCI_B">;
+  def : PatCorevGprImm<"shuffleI2_sci_b", "SHUFFLEI2_SCI_B">;
+  def : PatCorevGprImm<"shuffleI3_sci_b", "SHUFFLEI3_SCI_B">;
   defm SHUFFLE2 : PatCorevGprGprHB<"shuffle2">;
 
   def : PatCorevGprGpr<"pack", "PACK">;
