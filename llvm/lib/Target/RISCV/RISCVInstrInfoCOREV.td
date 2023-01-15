@@ -231,8 +231,12 @@ let Predicates = [HasExtXCoreVSIMD], hasSideEffects = 0, mayLoad = 0, mayStore =
   def CV_PACK :      SIMDALU_rr<0b1111000, 0b000, "cv.pack">;
   def CV_PACK_H :    SIMDALU_rr<0b1111001, 0b000, "cv.pack.h">;
   
-  def CV_PACKHI_B :    SIMDALU_rr<0b1111101, 0b001, "cv.packhi.b">;
-  def CV_PACKLO_B :    SIMDALU_rr<0b1111100, 0b001, "cv.packlo.b">;
+  let Constraints = "$rd = $rd_wb" in {
+    def CV_PACKHI_B : RVInstSIMDR<0b1111101, 0b001, OPC_CUSTOM3, (outs GPR:$rd_wb),
+      (ins GPR:$rd, GPR:$rs1, GPR:$rs2), "cv.packhi.b", "$rd, $rs1, $rs2">;
+    def CV_PACKLO_B : RVInstSIMDR<0b1111100, 0b001, OPC_CUSTOM3, (outs GPR:$rd_wb),
+      (ins GPR:$rd, GPR:$rs1, GPR:$rs2), "cv.packlo.b", "$rd, $rs1, $rs2">;
+  }
   
   defm CMPEQ : SIMD_BinarySigned<0b0000010, "cmpeq">;
   defm CMPNE :  SIMD_BinarySigned<0b0000110, "cmpne">;
@@ -875,8 +879,10 @@ let Predicates = [HasExtXCoreVSIMD] in {
 
   def : PatCorevGprGpr<"pack", "PACK">;
   def : PatCorevGprGpr<"pack_h", "PACK_H">;
-  def : PatCorevGprGpr<"packhi_b", "PACKHI_B">;
-  def : PatCorevGprGpr<"packlo_b", "PACKLO_B">;
+  def : Pat<(int_riscv_cv_packhi_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
+            (CV_PACKHI_B GPR:$rd, GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(int_riscv_cv_packlo_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
+            (CV_PACKLO_B GPR:$rd, GPR:$rs1, GPR:$rs2)>;
 
   defm CMPEQ :  PatCorevBinary<"cmpeq">;
   defm CMPNE :  PatCorevBinary<"cmpne">;
