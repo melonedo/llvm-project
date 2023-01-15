@@ -19584,7 +19584,22 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
 #define TARGET_DATA_ONLY_BUILTIN(NAME, TYPE, ATTRS, FEATURE) 
 #include "clang/Basic/BuiltinsRISCVCOREV.def"
 
-  // Vector builtins are handled from here.
+  case RISCVCOREV::BI__builtin_corev_packhi_b:
+    ID = Intrinsic::riscv_cv_packhi_b;
+    goto emitPack;
+  case RISCVCOREV::BI__builtin_corev_packlo_b:
+    ID = Intrinsic::riscv_cv_packlo_b;
+emitPack:
+    {
+      llvm::Function *F = CGM.getIntrinsic(ID);
+      Address addr = EmitPointerWithAlignment(E->getArg(0));
+      llvm::LoadInst *load = Builder.CreateLoad(addr);
+      llvm::CallInst *ret = Builder.CreateCall(F, {load, Ops[1], Ops[2]});
+      Builder.CreateStore(ret, addr);
+      return ret;
+    }
+
+    // Vector builtins are handled from here.
 #include "clang/Basic/riscv_vector_builtin_cg.inc"
   }
 
