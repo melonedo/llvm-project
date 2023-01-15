@@ -1661,8 +1661,10 @@ defm shuffle2 : ScalarCoreVSimdGprGprIntrinsicHB;
 
 def int_riscv_cv_pack : ScalarCoreVSimdGprGprIntrinsic;
 def int_riscv_cv_pack_h : ScalarCoreVSimdGprGprIntrinsic;
-def int_riscv_cv_packhi_b : ScalarCoreVSimdGprGprIntrinsic;
-def int_riscv_cv_packlo_b : ScalarCoreVSimdGprGprIntrinsic;
+def int_riscv_cv_packhi_b : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+                                      [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
+def int_riscv_cv_packlo_b : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+                                      [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 
 defm cmpeq : CoreVSimdBinary;
 defm cmpne : CoreVSimdBinary;
