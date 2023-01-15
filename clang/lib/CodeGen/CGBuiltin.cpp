@@ -19581,6 +19581,7 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
   case RISCVCOREV::BI__builtin_corev_##NAME: \
     ID = Intrinsic::riscv_cv_##NAME;         \
     break;
+#define TARGET_DATA_ONLY_BUILTIN(NAME, TYPE, ATTRS, FEATURE) 
 #include "clang/Basic/BuiltinsRISCVCOREV.def"
 
   // Vector builtins are handled from here.
