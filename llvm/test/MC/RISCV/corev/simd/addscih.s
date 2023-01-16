@@ -9,3 +9,7 @@ cv.add.sci.h a0, a1, 7
 # CHECK-INSTR: cv.add.sci.h a0, a1, 7
 # CHECK-ENCODING: [0x7b,0xe5,0x35,0x02]
 
+cv.add.sci.h s0, s1, -1
+# CHECK-INSTR: cv.add.sci.h s0, s1, -1
+# CHECK-ENCODING: [0x7b,0xe4,0xf4,0x03]
+

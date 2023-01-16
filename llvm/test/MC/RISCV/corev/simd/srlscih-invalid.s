@@ -7,7 +7,14 @@ cv.srl.sci.h 0, t1, t2
 cv.srl.sci.h t0, 0, t2
 # CHECK-ERROR: invalid operand for instruction
 
-# Not tested because uimm6 is not defined
+cv.srl.sci.h t0, t1, t2, t3
+# CHECK-ERROR: immediate must be an integer in the range [0, 63]
+
+cv.srl.sci.h t0, t1, t2
+# CHECK-ERROR: immediate must be an integer in the range [0, 63]
+
+cv.srl.sci.h t0, t1, -1
+# CHECK-ERROR: immediate must be an integer in the range [0, 63]
 
 cv.srl.sci.h t0, t1
 # CHECK-ERROR: too few operands for instruction

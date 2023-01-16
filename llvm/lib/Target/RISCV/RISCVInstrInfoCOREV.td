@@ -145,10 +145,9 @@ class SIMDALU_ri<bits<7> funct7, bits<3> funct3, string opcodestr>
               (ins GPR:$rs1, simm6:$imm6), opcodestr, "$rd, $rs1, $imm6"> {
 }
 
-// TODO: define uimm6 instead of stealing uimm7
 class SIMDALU_ru<bits<7> funct7, bits<3> funct3, string opcodestr>
     : RVInstSIMDI<funct7, funct3, OPC_CUSTOM3, (outs GPR:$rd),
-              (ins GPR:$rs1, uimm7:$imm6), opcodestr, "$rd, $rs1, $imm6"> {
+              (ins GPR:$rs1, uimm6:$imm6), opcodestr, "$rd, $rs1, $imm6"> {
 }
 
 class SIMDALU_r<bits<7> funct7, bits<3> funct3, string opcodestr>

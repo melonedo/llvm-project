@@ -9,3 +9,7 @@ cv.cplxmul.r.div2 a0, a1, a2
 # CHECK-INSTR: cv.cplxmul.r.div2 a0, a1, a2
 # CHECK-ENCODING: [0x7b,0xa5,0xc5,0x54]
 
+cv.cplxmul.r.div2 s0, s1, s2
+# CHECK-INSTR: cv.cplxmul.r.div2 s0, s1, s2
+# CHECK-ENCODING: [0x7b,0xa4,0x24,0x55]
+

@@ -9,3 +9,7 @@ cv.subrotmj.div4 a0, a1, a2
 # CHECK-INSTR: cv.subrotmj.div4 a0, a1, a2
 # CHECK-ENCODING: [0x7b,0xc5,0xc5,0x64]
 
+cv.subrotmj.div4 s0, s1, s2
+# CHECK-INSTR: cv.subrotmj.div4 s0, s1, s2
+# CHECK-ENCODING: [0x7b,0xc4,0x24,0x65]
+

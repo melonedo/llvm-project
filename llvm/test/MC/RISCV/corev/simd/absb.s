@@ -9,3 +9,7 @@ cv.abs.b a0, a1
 # CHECK-INSTR: cv.abs.b a0, a1
 # CHECK-ENCODING: [0x7b,0x95,0x05,0x70]
 
+cv.abs.b s0, s1
+# CHECK-INSTR: cv.abs.b s0, s1
+# CHECK-ENCODING: [0x7b,0x94,0x04,0x70]
+

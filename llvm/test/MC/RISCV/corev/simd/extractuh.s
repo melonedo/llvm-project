@@ -9,3 +9,7 @@ cv.extractu.h a0, a1, 7
 # CHECK-INSTR: cv.extractu.h a0, a1, 7
 # CHECK-ENCODING: [0x7b,0xa5,0x35,0xba]
 
+cv.extractu.h s0, s1, -1
+# CHECK-INSTR: cv.extractu.h s0, s1, -1
+# CHECK-ENCODING: [0x7b,0xa4,0xf4,0xbb]
+

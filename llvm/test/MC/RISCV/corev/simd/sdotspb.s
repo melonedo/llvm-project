@@ -9,3 +9,7 @@ cv.sdotsp.b a0, a1, a2
 # CHECK-INSTR: cv.sdotsp.b a0, a1, a2
 # CHECK-ENCODING: [0x7b,0x95,0xc5,0xa8]
 
+cv.sdotsp.b s0, s1, s2
+# CHECK-INSTR: cv.sdotsp.b s0, s1, s2
+# CHECK-ENCODING: [0x7b,0x94,0x24,0xa9]
+

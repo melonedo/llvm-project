@@ -9,3 +9,7 @@ cv.min.b a0, a1, a2
 # CHECK-INSTR: cv.min.b a0, a1, a2
 # CHECK-ENCODING: [0x7b,0x95,0xc5,0x20]
 
+cv.min.b s0, s1, s2
+# CHECK-INSTR: cv.min.b s0, s1, s2
+# CHECK-ENCODING: [0x7b,0x94,0x24,0x21]
+

@@ -9,3 +9,7 @@ cv.cplxconj a0, a1
 # CHECK-INSTR: cv.cplxconj a0, a1
 # CHECK-ENCODING: [0x7b,0x85,0x05,0x5c]
 
+cv.cplxconj s0, s1
+# CHECK-INSTR: cv.cplxconj s0, s1
+# CHECK-ENCODING: [0x7b,0x84,0x04,0x5c]
+
