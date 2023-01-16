@@ -9,3 +9,7 @@ cv.insert.h a0, a1, 7
 # CHECK-INSTR: cv.insert.h a0, a1, 7
 # CHECK-ENCODING: [0x7b,0xc5,0x35,0xba]
 
+cv.insert.h s0, s1, -1
+# CHECK-INSTR: cv.insert.h s0, s1, -1
+# CHECK-ENCODING: [0x7b,0xc4,0xf4,0xbb]
+

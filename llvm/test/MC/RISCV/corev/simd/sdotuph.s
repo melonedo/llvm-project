@@ -9,3 +9,7 @@ cv.sdotup.h a0, a1, a2
 # CHECK-INSTR: cv.sdotup.h a0, a1, a2
 # CHECK-ENCODING: [0x7b,0x85,0xc5,0x98]
 
+cv.sdotup.h s0, s1, s2
+# CHECK-INSTR: cv.sdotup.h s0, s1, s2
+# CHECK-ENCODING: [0x7b,0x84,0x24,0x99]
+

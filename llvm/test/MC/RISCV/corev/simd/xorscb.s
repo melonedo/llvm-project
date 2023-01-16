@@ -9,3 +9,7 @@ cv.xor.sc.b a0, a1, a2
 # CHECK-INSTR: cv.xor.sc.b a0, a1, a2
 # CHECK-ENCODING: [0x7b,0xd5,0xc5,0x60]
 
+cv.xor.sc.b s0, s1, s2
+# CHECK-INSTR: cv.xor.sc.b s0, s1, s2
+# CHECK-ENCODING: [0x7b,0xd4,0x24,0x61]
+

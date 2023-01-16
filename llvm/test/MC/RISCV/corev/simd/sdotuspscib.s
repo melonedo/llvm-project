@@ -9,3 +9,7 @@ cv.sdotusp.sci.b a0, a1, 7
 # CHECK-INSTR: cv.sdotusp.sci.b a0, a1, 7
 # CHECK-ENCODING: [0x7b,0xf5,0x35,0xa2]
 
+cv.sdotusp.sci.b s0, s1, -1
+# CHECK-INSTR: cv.sdotusp.sci.b s0, s1, -1
+# CHECK-ENCODING: [0x7b,0xf4,0xf4,0xa3]
+
