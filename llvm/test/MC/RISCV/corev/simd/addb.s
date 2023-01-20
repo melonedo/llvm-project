@@ -9,3 +9,7 @@ cv.add.b a0, a1, a2
 # CHECK-INSTR: cv.add.b a0, a1, a2
 # CHECK-ENCODING: [0x7b,0x95,0xc5,0x00]
 
+cv.add.b s0, s1, s2
+# CHECK-INSTR: cv.add.b s0, s1, s2
+# CHECK-ENCODING: [0x7b,0x94,0x24,0x01]
+

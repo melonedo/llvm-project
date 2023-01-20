@@ -9,3 +9,7 @@ cv.avg.sci.h a0, a1, 7
 # CHECK-INSTR: cv.avg.sci.h a0, a1, 7
 # CHECK-ENCODING: [0x7b,0xe5,0x35,0x12]
 
+cv.avg.sci.h s0, s1, -1
+# CHECK-INSTR: cv.avg.sci.h s0, s1, -1
+# CHECK-ENCODING: [0x7b,0xe4,0xf4,0x13]
+

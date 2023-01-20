@@ -13,6 +13,9 @@ cv.avgu.sci.b t0, t1, t2, t3
 cv.avgu.sci.b t0, t1, t2
 # CHECK-ERROR: immediate must be an integer in the range [-32, 31]
 
+cv.avgu.sci.b t0, t1, 63
+# CHECK-ERROR: immediate must be an integer in the range [-32, 31]
+
 cv.avgu.sci.b t0, t1
 # CHECK-ERROR: too few operands for instruction
 

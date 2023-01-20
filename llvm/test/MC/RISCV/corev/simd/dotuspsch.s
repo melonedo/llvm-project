@@ -9,3 +9,7 @@ cv.dotusp.sc.h a0, a1, a2
 # CHECK-INSTR: cv.dotusp.sc.h a0, a1, a2
 # CHECK-ENCODING: [0x7b,0xc5,0xc5,0x88]
 
+cv.dotusp.sc.h s0, s1, s2
+# CHECK-INSTR: cv.dotusp.sc.h s0, s1, s2
+# CHECK-ENCODING: [0x7b,0xc4,0x24,0x89]
+
