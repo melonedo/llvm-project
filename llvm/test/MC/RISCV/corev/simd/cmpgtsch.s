@@ -9,3 +9,7 @@ cv.cmpgt.sc.h a0, a1, a2
 # CHECK-INSTR: cv.cmpgt.sc.h a0, a1, a2
 # CHECK-ENCODING: [0x7b,0xc5,0xc5,0x14]
 
+cv.cmpgt.sc.h s0, s1, s2
+# CHECK-INSTR: cv.cmpgt.sc.h s0, s1, s2
+# CHECK-ENCODING: [0x7b,0xc4,0x24,0x15]
+

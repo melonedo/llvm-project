@@ -9,3 +9,7 @@ cv.cmpne.sc.b a0, a1, a2
 # CHECK-INSTR: cv.cmpne.sc.b a0, a1, a2
 # CHECK-ENCODING: [0x7b,0xd5,0xc5,0x0c]
 
+cv.cmpne.sc.b s0, s1, s2
+# CHECK-INSTR: cv.cmpne.sc.b s0, s1, s2
+# CHECK-ENCODING: [0x7b,0xd4,0x24,0x0d]
+

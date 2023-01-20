@@ -9,3 +9,7 @@ cv.sub.sci.b a0, a1, 7
 # CHECK-INSTR: cv.sub.sci.b a0, a1, 7
 # CHECK-ENCODING: [0x7b,0xf5,0x35,0x0a]
 
+cv.sub.sci.b s0, s1, -1
+# CHECK-INSTR: cv.sub.sci.b s0, s1, -1
+# CHECK-ENCODING: [0x7b,0xf4,0xf4,0x0b]
+

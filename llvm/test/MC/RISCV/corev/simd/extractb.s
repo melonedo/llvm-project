@@ -9,3 +9,7 @@ cv.extract.b a0, a1, 7
 # CHECK-INSTR: cv.extract.b a0, a1, 7
 # CHECK-ENCODING: [0x7b,0x95,0x35,0xba]
 
+cv.extract.b s0, s1, -1
+# CHECK-INSTR: cv.extract.b s0, s1, -1
+# CHECK-ENCODING: [0x7b,0x94,0xf4,0xbb]
+

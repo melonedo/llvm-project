@@ -9,3 +9,7 @@ cv.avgu.h a0, a1, a2
 # CHECK-INSTR: cv.avgu.h a0, a1, a2
 # CHECK-ENCODING: [0x7b,0x85,0xc5,0x18]
 
+cv.avgu.h s0, s1, s2
+# CHECK-INSTR: cv.avgu.h s0, s1, s2
+# CHECK-ENCODING: [0x7b,0x84,0x24,0x19]
+

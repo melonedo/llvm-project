@@ -1,14 +1,14 @@
 ; RUN: llc -O0 -mtriple=riscv32 -mattr=+m -mattr=+xcorevsimd -verify-machineinstrs < %s \
 ; RUN:   | FileCheck %s
 
-declare i32 @llvm.riscv.cv.add.h(i32, i32)
+declare i32 @llvm.riscv.cv.add.h(i32, i32, i32)
 
 define i32 @test.cv.add.h(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.add.h:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.add.h a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.add.h(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.add.h(i32 %a, i32 %b, i32 1)
   ret i32 %1
 }
 
@@ -63,14 +63,14 @@ define i32 @test.cv.add.sci.b(i32 %a) {
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.sub.h(i32, i32)
+declare i32 @llvm.riscv.cv.sub.h(i32, i32, i32)
 
 define i32 @test.cv.sub.h(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.sub.h:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.sub.h a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.sub.h(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.sub.h(i32 %a, i32 %b, i32 1)
   ret i32 %1
 }
 
@@ -1307,25 +1307,25 @@ define i32 @test.cv.extractu.b(i32 %a) {
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.insert.h(i32, i32)
+declare i32 @llvm.riscv.cv.insert.h(i32, i32, i32)
 
-define i32 @test.cv.insert.h(i32 %a) {
+define i32 @test.cv.insert.h(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.insert.h:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cv.insert.h a0, a0, 5
+; CHECK-NEXT:    cv.insert.h a0, a1, 5
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.h(i32 %a, i32 5)
+  %1 = call i32 @llvm.riscv.cv.insert.h(i32 %a, i32 %b, i32 5)
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.insert.b(i32, i32)
+declare i32 @llvm.riscv.cv.insert.b(i32, i32, i32)
 
-define i32 @test.cv.insert.b(i32 %a) {
+define i32 @test.cv.insert.b(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.insert.b:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cv.insert.b a0, a0, 5
+; CHECK-NEXT:    cv.insert.b a0, a1, 5
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.b(i32 %a, i32 5)
+  %1 = call i32 @llvm.riscv.cv.insert.b(i32 %a, i32 %b, i32 5)
   ret i32 %1
 }
 
@@ -2092,91 +2092,79 @@ define i32 @test.cv.cmpleu.sci.b(i32 %a) {
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.cplxmul.r(i32, i32)
+declare i32 @llvm.riscv.cv.cplxmul.r(i32, i32, i32)
 
 define i32 @test.cv.cplxmul.r(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.cplxmul.r:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.cplxmul.r a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.cplxmul.r(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.cplxmul.r(i32 %a, i32 %b, i32 1)
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.cplxmul.i(i32, i32)
+declare i32 @llvm.riscv.cv.cplxmul.i(i32, i32, i32)
 
 define i32 @test.cv.cplxmul.i(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.cplxmul.i:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.cplxmul.i a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.cplxmul.i(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.cplxmul.i(i32 %a, i32 %b, i32 1)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.cplxmul.r.div2(i32, i32)
 
 define i32 @test.cv.cplxmul.r.div2(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.cplxmul.r.div2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.cplxmul.r.div2 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.cplxmul.r.div2(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.cplxmul.r(i32 %a, i32 %b, i32 2)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.cplxmul.i.div2(i32, i32)
 
 define i32 @test.cv.cplxmul.i.div2(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.cplxmul.i.div2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.cplxmul.i.div2 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.cplxmul.i.div2(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.cplxmul.i(i32 %a, i32 %b, i32 2)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.cplxmul.r.div4(i32, i32)
 
 define i32 @test.cv.cplxmul.r.div4(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.cplxmul.r.div4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.cplxmul.r.div4 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.cplxmul.r.div4(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.cplxmul.r(i32 %a, i32 %b, i32 4)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.cplxmul.i.div4(i32, i32)
 
 define i32 @test.cv.cplxmul.i.div4(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.cplxmul.i.div4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.cplxmul.i.div4 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.cplxmul.i.div4(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.cplxmul.i(i32 %a, i32 %b, i32 4)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.cplxmul.r.div8(i32, i32)
 
 define i32 @test.cv.cplxmul.r.div8(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.cplxmul.r.div8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.cplxmul.r.div8 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.cplxmul.r.div8(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.cplxmul.r(i32 %a, i32 %b, i32 8)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.cplxmul.i.div8(i32, i32)
 
 define i32 @test.cv.cplxmul.i.div8(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.cplxmul.i.div8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.cplxmul.i.div8 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.cplxmul.i.div8(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.cplxmul.i(i32 %a, i32 %b, i32 8)
   ret i32 %1
 }
 
@@ -2191,113 +2179,96 @@ define i32 @test.cv.cplxconj(i32 %a) {
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.subrotmj(i32, i32)
+declare i32 @llvm.riscv.cv.subrotmj(i32, i32, i32)
 
 define i32 @test.cv.subrotmj(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.subrotmj:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.subrotmj a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.subrotmj(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.subrotmj(i32 %a, i32 %b, i32 1)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.subrotmj.div2(i32, i32)
 
 define i32 @test.cv.subrotmj.div2(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.subrotmj.div2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.subrotmj.div2 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.subrotmj.div2(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.subrotmj(i32 %a, i32 %b, i32 2)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.subrotmj.div4(i32, i32)
 
 define i32 @test.cv.subrotmj.div4(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.subrotmj.div4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.subrotmj.div4 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.subrotmj.div4(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.subrotmj(i32 %a, i32 %b, i32 4)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.subrotmj.div8(i32, i32)
 
 define i32 @test.cv.subrotmj.div8(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.subrotmj.div8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.subrotmj.div8 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.subrotmj.div8(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.subrotmj(i32 %a, i32 %b, i32 8)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.add.div2(i32, i32)
 
 define i32 @test.cv.add.div2(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.add.div2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.add.div2 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.add.div2(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.add.h(i32 %a, i32 %b, i32 2)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.add.div4(i32, i32)
 
 define i32 @test.cv.add.div4(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.add.div4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.add.div4 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.add.div4(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.add.h(i32 %a, i32 %b, i32 4)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.add.div8(i32, i32)
 
 define i32 @test.cv.add.div8(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.add.div8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.add.div8 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.add.div8(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.add.h(i32 %a, i32 %b, i32 8)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.sub.div2(i32, i32)
 
 define i32 @test.cv.sub.div2(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.sub.div2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.sub.div2 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.sub.div2(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.sub.h(i32 %a, i32 %b, i32 2)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.sub.div4(i32, i32)
 
 define i32 @test.cv.sub.div4(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.sub.div4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.sub.div4 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.sub.div4(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.sub.h(i32 %a, i32 %b, i32 4)
   ret i32 %1
 }
-
-declare i32 @llvm.riscv.cv.sub.div8(i32, i32)
 
 define i32 @test.cv.sub.div8(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.sub.div8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.sub.div8 a0, a0, a1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.sub.div8(i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.sub.h(i32 %a, i32 %b, i32 8)
   ret i32 %1
 }
+
 
