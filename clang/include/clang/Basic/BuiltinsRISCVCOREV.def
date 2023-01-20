@@ -12,19 +12,19 @@
 //===----------------------------------------------------------------------===//
 
 #if defined(BUILTIN) && !defined(TARGET_BUILTIN)
-#define TARGET_BUILTIN(ID, TYPE, ATTRS, FEATURE) BUILTIN(ID, TYPE, ATTRS)
+#   define TARGET_BUILTIN(ID, TYPE, ATTRS, FEATURE) BUILTIN(ID, TYPE, ATTRS)
 #endif
 
 #if defined(TARGET_BUILTIN) && !defined(TARGET_DATA_ONLY_BUILTIN)
-#define TARGET_DATA_ONLY_BUILTIN(ID, TYPE, ATTRS, FEATURE)                     \
+#   define TARGET_DATA_ONLY_BUILTIN(ID, TYPE, ATTRS, FEATURE)                  \
   TARGET_BUILTIN(ID, TYPE, ATTRS, FEATURE)
 #endif
 
-TARGET_DATA_ONLY_BUILTIN(add_h, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
+TARGET_BUILTIN(add_h, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(add_b, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(add_sc_h, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(add_sc_b, "UZiUZiUZi", "nc", "xcorevsimd")
-TARGET_DATA_ONLY_BUILTIN(sub_h, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
+TARGET_BUILTIN(sub_h, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(sub_b, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(sub_sc_h, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(sub_sc_b, "UZiUZiUZi", "nc", "xcorevsimd")
@@ -106,8 +106,8 @@ TARGET_BUILTIN(extract_h, "ZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(extract_b, "ZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(extractu_h, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(extractu_b, "UZiUZiUZi", "nc", "xcorevsimd")
-TARGET_DATA_ONLY_BUILTIN(insert_h, "UZi*UZiUZiUZi", "n", "xcorevsimd")
-TARGET_DATA_ONLY_BUILTIN(insert_b, "UZi*UZiUZiUZi", "n", "xcorevsimd")
+TARGET_DATA_ONLY_BUILTIN(insert_h, "UZiUZi*UZiIUZi", "n", "xcorevsimd")
+TARGET_DATA_ONLY_BUILTIN(insert_b, "UZiUZi*UZiIUZi", "n", "xcorevsimd")
 TARGET_BUILTIN(shuffle_h, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(shuffle_b, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(shuffle_sci_h, "UZiUZiUZi", "nc", "xcorevsimd")
@@ -161,10 +161,10 @@ TARGET_BUILTIN(cmpleu_h, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(cmpleu_b, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(cmpleu_sc_h, "UZiUZiUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(cmpleu_sc_b, "UZiUZiUZi", "nc", "xcorevsimd")
-TARGET_DATA_ONLY_BUILTIN(cplxmul_r, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
-TARGET_DATA_ONLY_BUILTIN(cplxmul_i, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
+TARGET_BUILTIN(cplxmul_r, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
+TARGET_BUILTIN(cplxmul_i, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
 TARGET_BUILTIN(cplxconj, "UZiUZi", "nc", "xcorevsimd")
-TARGET_DATA_ONLY_BUILTIN(subrotmj, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
+TARGET_BUILTIN(subrotmj, "UZiUZiUZiIUZi", "nc", "xcorevsimd")
 
 #undef BUILTIN
 #undef TARGET_BUILTIN

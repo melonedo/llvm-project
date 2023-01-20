@@ -4,6 +4,66 @@
 
 #include <stdint.h>
 
+// CHECK-LABEL: @test_add_h_div1(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.add.h(i32 [[TMP0]], i32 [[TMP1]], i32 1)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_add_h_div1(uint32_t a, uint32_t b) {
+	return __builtin_corev_add_h(a, b, 1);
+}
+
+// CHECK-LABEL: @test_add_h_div2(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.add.h(i32 [[TMP0]], i32 [[TMP1]], i32 2)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_add_h_div2(uint32_t a, uint32_t b) {
+	return __builtin_corev_add_h(a, b, 2);
+}
+
+// CHECK-LABEL: @test_add_h_div4(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.add.h(i32 [[TMP0]], i32 [[TMP1]], i32 4)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_add_h_div4(uint32_t a, uint32_t b) {
+	return __builtin_corev_add_h(a, b, 4);
+}
+
+// CHECK-LABEL: @test_add_h_div8(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.add.h(i32 [[TMP0]], i32 [[TMP1]], i32 8)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_add_h_div8(uint32_t a, uint32_t b) {
+	return __builtin_corev_add_h(a, b, 8);
+}
+
 // CHECK-LABEL: @test_add_b(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
@@ -71,6 +131,66 @@ uint32_t test_add_sc_b(uint32_t a, uint32_t b) {
 //
 uint32_t test_add_sci_b(uint32_t a) {
 	return __builtin_corev_add_sc_b(a, 5);
+}
+
+// CHECK-LABEL: @test_sub_h_div1(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.sub.h(i32 [[TMP0]], i32 [[TMP1]], i32 1)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_sub_h_div1(uint32_t a, uint32_t b) {
+	return __builtin_corev_sub_h(a, b, 1);
+}
+
+// CHECK-LABEL: @test_sub_h_div2(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.sub.h(i32 [[TMP0]], i32 [[TMP1]], i32 2)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_sub_h_div2(uint32_t a, uint32_t b) {
+	return __builtin_corev_sub_h(a, b, 2);
+}
+
+// CHECK-LABEL: @test_sub_h_div4(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.sub.h(i32 [[TMP0]], i32 [[TMP1]], i32 4)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_sub_h_div4(uint32_t a, uint32_t b) {
+	return __builtin_corev_sub_h(a, b, 4);
+}
+
+// CHECK-LABEL: @test_sub_h_div8(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.sub.h(i32 [[TMP0]], i32 [[TMP1]], i32 8)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_sub_h_div8(uint32_t a, uint32_t b) {
+	return __builtin_corev_sub_h(a, b, 8);
 }
 
 // CHECK-LABEL: @test_sub_b(
@@ -2716,6 +2836,126 @@ uint32_t test_cmpleu_sci_b(uint32_t a) {
 	return __builtin_corev_cmpleu_sc_b(a, 5);
 }
 
+// CHECK-LABEL: @test_cplxmul_r_div1(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.cplxmul.r(i32 [[TMP0]], i32 [[TMP1]], i32 1)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_cplxmul_r_div1(uint32_t a, uint32_t b) {
+	return __builtin_corev_cplxmul_r(a, b, 1);
+}
+
+// CHECK-LABEL: @test_cplxmul_r_div2(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.cplxmul.r(i32 [[TMP0]], i32 [[TMP1]], i32 2)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_cplxmul_r_div2(uint32_t a, uint32_t b) {
+	return __builtin_corev_cplxmul_r(a, b, 2);
+}
+
+// CHECK-LABEL: @test_cplxmul_r_div4(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.cplxmul.r(i32 [[TMP0]], i32 [[TMP1]], i32 4)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_cplxmul_r_div4(uint32_t a, uint32_t b) {
+	return __builtin_corev_cplxmul_r(a, b, 4);
+}
+
+// CHECK-LABEL: @test_cplxmul_r_div8(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.cplxmul.r(i32 [[TMP0]], i32 [[TMP1]], i32 8)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_cplxmul_r_div8(uint32_t a, uint32_t b) {
+	return __builtin_corev_cplxmul_r(a, b, 8);
+}
+
+// CHECK-LABEL: @test_cplxmul_i_div1(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.cplxmul.i(i32 [[TMP0]], i32 [[TMP1]], i32 1)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_cplxmul_i_div1(uint32_t a, uint32_t b) {
+	return __builtin_corev_cplxmul_i(a, b, 1);
+}
+
+// CHECK-LABEL: @test_cplxmul_i_div2(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.cplxmul.i(i32 [[TMP0]], i32 [[TMP1]], i32 2)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_cplxmul_i_div2(uint32_t a, uint32_t b) {
+	return __builtin_corev_cplxmul_i(a, b, 2);
+}
+
+// CHECK-LABEL: @test_cplxmul_i_div4(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.cplxmul.i(i32 [[TMP0]], i32 [[TMP1]], i32 4)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_cplxmul_i_div4(uint32_t a, uint32_t b) {
+	return __builtin_corev_cplxmul_i(a, b, 4);
+}
+
+// CHECK-LABEL: @test_cplxmul_i_div8(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.cplxmul.i(i32 [[TMP0]], i32 [[TMP1]], i32 8)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_cplxmul_i_div8(uint32_t a, uint32_t b) {
+	return __builtin_corev_cplxmul_i(a, b, 8);
+}
+
 // CHECK-LABEL: @test_cplxconj(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
@@ -2726,5 +2966,65 @@ uint32_t test_cmpleu_sci_b(uint32_t a) {
 //
 uint32_t test_cplxconj(uint32_t a) {
 	return __builtin_corev_cplxconj(a);
+}
+
+// CHECK-LABEL: @test_subrotmj_div1(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.subrotmj(i32 [[TMP0]], i32 [[TMP1]], i32 1)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_subrotmj_div1(uint32_t a, uint32_t b) {
+	return __builtin_corev_subrotmj(a, b, 1);
+}
+
+// CHECK-LABEL: @test_subrotmj_div2(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.subrotmj(i32 [[TMP0]], i32 [[TMP1]], i32 2)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_subrotmj_div2(uint32_t a, uint32_t b) {
+	return __builtin_corev_subrotmj(a, b, 2);
+}
+
+// CHECK-LABEL: @test_subrotmj_div4(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.subrotmj(i32 [[TMP0]], i32 [[TMP1]], i32 4)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_subrotmj_div4(uint32_t a, uint32_t b) {
+	return __builtin_corev_subrotmj(a, b, 4);
+}
+
+// CHECK-LABEL: @test_subrotmj_div8(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
+// CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.subrotmj(i32 [[TMP0]], i32 [[TMP1]], i32 8)
+// CHECK-NEXT:    ret i32 [[TMP2]]
+//
+uint32_t test_subrotmj_div8(uint32_t a, uint32_t b) {
+	return __builtin_corev_subrotmj(a, b, 8);
 }
 

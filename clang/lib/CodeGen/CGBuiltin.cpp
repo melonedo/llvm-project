@@ -19586,10 +19586,16 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
 
   case RISCVCOREV::BI__builtin_corev_packhi_b:
     ID = Intrinsic::riscv_cv_packhi_b;
-    goto emitPack;
+    goto emit_loadstore;
   case RISCVCOREV::BI__builtin_corev_packlo_b:
     ID = Intrinsic::riscv_cv_packlo_b;
-emitPack:
+    goto emit_loadstore;
+  case RISCVCOREV::BI__builtin_corev_insert_h:
+    ID = Intrinsic::riscv_cv_insert_h;
+    goto emit_loadstore;
+  case RISCVCOREV::BI__builtin_corev_insert_b:
+    ID = Intrinsic::riscv_cv_insert_b;
+emit_loadstore:
     {
       llvm::Function *F = CGM.getIntrinsic(ID);
       Address addr = EmitPointerWithAlignment(E->getArg(0));
