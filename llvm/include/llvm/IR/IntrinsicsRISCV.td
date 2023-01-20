@@ -1591,6 +1591,10 @@ class ScalarCoreVSimdGprGprIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 
+class ScalarCoreVSimdGprGprImmIntrinsic
+    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+                [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
+
 // Setting immarg will make LLVM classify the argument as TargetConstant,
 // preventing conditional selection.
 class ScalarCoreVSimdGprImmIntrinsic
@@ -1617,14 +1621,20 @@ multiclass ScalarCoreVSimdGprImmIntrinsicHB {
   def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprImmIntrinsic;
 }
 
-multiclass CoreVSimdBinary {
-  defm NAME : ScalarCoreVSimdGprGprIntrinsicHB;
+multiclass CoreVSimdBinary <bit exclude_h = false> {
+  if exclude_h then {
+    def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic;
+  } else {
+    defm NAME : ScalarCoreVSimdGprGprIntrinsicHB;
+  }
   defm NAME # _sc : ScalarCoreVSimdGprGprIntrinsicHB;
 }
 
 let TargetPrefix = "riscv" in {
-defm add : CoreVSimdBinary;
-defm sub : CoreVSimdBinary;
+defm add : CoreVSimdBinary<true>;
+def int_riscv_cv_add_h : ScalarCoreVSimdGprGprImmIntrinsic;
+defm sub : CoreVSimdBinary<true>;
+def int_riscv_cv_sub_h : ScalarCoreVSimdGprGprImmIntrinsic;
 defm avg : CoreVSimdBinary;
 defm avgu : CoreVSimdBinary;
 defm min : CoreVSimdBinary;
@@ -1649,10 +1659,8 @@ defm sdotsp : CoreVSimdBinary;
 
 defm extract : ScalarCoreVSimdGprImmIntrinsicHB;
 defm extractu : ScalarCoreVSimdGprImmIntrinsicHB;
-def int_riscv_cv_insert_b : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
-                                      [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
-def int_riscv_cv_insert_h : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
-                                      [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
+def int_riscv_cv_insert_b : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_insert_h : ScalarCoreVSimdGprGprImmIntrinsic;
 
 
 defm shuffle : ScalarCoreVSimdGprGprIntrinsicHB;
@@ -1681,16 +1689,10 @@ defm cmpgeu : CoreVSimdBinary;
 defm cmpltu : CoreVSimdBinary;
 defm cmpleu : CoreVSimdBinary;
 
-def int_riscv_cv_cplxmul_r : ScalarCoreVSimdGprGprIntrinsic;
-def int_riscv_cv_cplxmul_i : ScalarCoreVSimdGprGprIntrinsic;
-defm cplxmul_r : ScalarCoreVSimdGprGprIntrinsicDiv;
-defm cplxmul_i : ScalarCoreVSimdGprGprIntrinsicDiv;
+def int_riscv_cv_cplxmul_r : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_cplxmul_i : ScalarCoreVSimdGprGprImmIntrinsic;
 
 def int_riscv_cv_cplxconj : ScalarCoreVSimdGprIntrinsic;
 
-def int_riscv_cv_subrotmj : ScalarCoreVSimdGprGprIntrinsic;
-defm subrotmj : ScalarCoreVSimdGprGprIntrinsicDiv;
-
-defm add : ScalarCoreVSimdGprGprIntrinsicDiv;
-defm sub : ScalarCoreVSimdGprGprIntrinsicDiv;
+def int_riscv_cv_subrotmj : ScalarCoreVSimdGprGprImmIntrinsic;
 } // TargetPrefix = "riscv"
