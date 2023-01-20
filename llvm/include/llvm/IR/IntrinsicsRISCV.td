@@ -1649,7 +1649,11 @@ defm sdotsp : CoreVSimdBinary;
 
 defm extract : ScalarCoreVSimdGprImmIntrinsicHB;
 defm extractu : ScalarCoreVSimdGprImmIntrinsicHB;
-defm insert : ScalarCoreVSimdGprImmIntrinsicHB;
+def int_riscv_cv_insert_b : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+                                      [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
+def int_riscv_cv_insert_h : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+                                      [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
+
 
 defm shuffle : ScalarCoreVSimdGprGprIntrinsicHB;
 def int_riscv_cv_shuffle_sci_h : ScalarCoreVSimdGprImmIntrinsic;

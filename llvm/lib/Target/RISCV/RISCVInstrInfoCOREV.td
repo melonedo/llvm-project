@@ -209,8 +209,12 @@ let Predicates = [HasExtXCoreVSIMD], hasSideEffects = 0, mayLoad = 0, mayStore =
   def CV_EXTRACT_B :    SIMDALU_ri<0b1011100, 0b001, "cv.extract.b">;
   def CV_EXTRACTU_H :   SIMDALU_ri<0b1011100, 0b010, "cv.extractu.h">;
   def CV_EXTRACTU_B :   SIMDALU_ri<0b1011100, 0b011, "cv.extractu.b">;
-  def CV_INSERT_H :   SIMDALU_ri<0b1011100, 0b100, "cv.insert.h">;
-  def CV_INSERT_B :   SIMDALU_ri<0b1011100, 0b101, "cv.insert.b">;
+  let Constraints = "$rd = $rd_wb" in {
+    def CV_INSERT_H : RVInstSIMDI<0b1011100, 0b100, OPC_CUSTOM3, (outs GPR:$rd_wb),
+      (ins GPR:$rd, GPR:$rs1, simm6:$imm6), "cv.insert.h", "$rd, $rs1, $imm6">;
+    def CV_INSERT_B : RVInstSIMDI<0b1011100, 0b101, OPC_CUSTOM3, (outs GPR:$rd_wb),
+      (ins GPR:$rd, GPR:$rs1, simm6:$imm6), "cv.insert.b", "$rd, $rs1, $imm6">;
+  }
 
   def CV_SHUFFLE_H :    SIMDALU_rr<0b1100000, 0b000, "cv.shuffle.h">;
   def CV_SHUFFLE_B :    SIMDALU_rr<0b1100000, 0b001, "cv.shuffle.b">;
@@ -867,7 +871,10 @@ let Predicates = [HasExtXCoreVSIMD] in {
 
   defm EXTRACT :  PatCorevGprImmHB<"extract">;
   defm EXTRACTU : PatCorevGprImmHB<"extractu">;
-  defm INSERT :   PatCorevGprImmHB<"insert">;
+  def : Pat<(int_riscv_cv_insert_b GPR:$rd, GPR:$rs1, GPR:$imm), 
+            (CV_INSERT_B GPR:$rd, GPR:$rs1, simm6:$imm)>;
+  def : Pat<(int_riscv_cv_insert_h GPR:$rd, GPR:$rs1, GPR:$imm), 
+            (CV_INSERT_H GPR:$rd, GPR:$rs1, simm6:$imm)>;
 
   defm SHUFFLE : PatCorevGprGprHB<"shuffle">;
   def : PatCorevGprImm<"shuffle_sci_h", "SHUFFLE_SCI_H">;

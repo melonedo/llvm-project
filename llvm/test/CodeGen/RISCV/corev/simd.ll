@@ -1307,25 +1307,25 @@ define i32 @test.cv.extractu.b(i32 %a) {
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.insert.h(i32, i32)
+declare i32 @llvm.riscv.cv.insert.h(i32, i32, i32)
 
-define i32 @test.cv.insert.h(i32 %a) {
+define i32 @test.cv.insert.h(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.insert.h:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cv.insert.h a0, a0, 5
+; CHECK-NEXT:    cv.insert.h a0, a1, 5
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.h(i32 %a, i32 5)
+  %1 = call i32 @llvm.riscv.cv.insert.h(i32 %a, i32 %b, i32 5)
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.insert.b(i32, i32)
+declare i32 @llvm.riscv.cv.insert.b(i32, i32, i32)
 
-define i32 @test.cv.insert.b(i32 %a) {
+define i32 @test.cv.insert.b(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.insert.b:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cv.insert.b a0, a0, 5
+; CHECK-NEXT:    cv.insert.b a0, a1, 5
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.b(i32 %a, i32 5)
+  %1 = call i32 @llvm.riscv.cv.insert.b(i32 %a, i32 %b, i32 5)
   ret i32 %1
 }
 
