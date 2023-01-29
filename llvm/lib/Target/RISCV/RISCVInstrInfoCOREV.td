@@ -786,60 +786,66 @@ let Predicates = [HasExtXCoreVMem] in {
 // Patterns for SIMD operations
 //===----------------------------------------------------------------------===//
 
-class PatCorevGprGpr <string intr, string asm> :
+def i8simm6 : ImmLeaf<i8, [{
+  return isInt<6>(Imm);
+}]>;
+
+def ti8simm6 : TImmLeaf<i8, [{
+  return isInt<6>(Imm);
+}]>;
+
+class PatCorevGprGpr<string intr, string asm> :
   PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr), 
             !cast<RVInst>("CV_" # asm)>;
 
-class PatCorevGprImm <string intr, string asm> :
-  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
-            !cast<RVInst>("CV_" # asm), simm6>;
+class PatCorevGprImm<string intr, string asm, ImmLeaf imm_type = i8simm6> :
+  Pat<(!cast<Intrinsic>("int_riscv_cv_" # intr) GPR:$rs1, imm_type:$imm),
+      (!cast<RVInst>("CV_" # asm) GPR:$rs1, simm6:$imm)>;
 
-// TODO: define uimm6
-class PatCorevGprUImm <string intr, string asm> :
-  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
-            !cast<RVInst>("CV_" # asm), simm6>;
+class PatCorevGprUImm<string intr, string asm> :
+  PatCorevGprImm<intr, asm>;
 
-multiclass PatCorevGprGprHB <string intr> {
+multiclass PatCorevGprGprHB<string intr> {
   def : PatCorevGprGpr<intr # "_h", NAME # "_H">;
   def : PatCorevGprGpr<intr # "_b", NAME # "_B">;
 }
 
-multiclass PatCorevGprImmHB <string intr> {
+multiclass PatCorevGprImmHB<string intr> {
   def : PatCorevGprImm<intr # "_h", NAME # "_H">;
   def : PatCorevGprImm<intr # "_b", NAME # "_B">;
 }
 
-multiclass PatCorevGprUImmHB <string intr> {
+multiclass PatCorevGprUImmHB<string intr> {
   def : PatCorevGprUImm<intr # "_h", NAME # "_H">;
   def : PatCorevGprUImm<intr # "_b", NAME # "_B">;
 }
 
-class PatCorevGprGprDiv <Intrinsic intr, string asm, int div> : 
-  Pat<(intr GPR:$rd, GPR:$rs1, div),
+class PatCorevGprGprDiv<Intrinsic intr, string asm, int div> : 
+  Pat<(intr GPR:$rd, GPR:$rs1, (i8 div)),
       (!cast<RVInst>("CV_" # asm) GPR:$rd, GPR:$rs1)>;
 
-multiclass PatCorevGprGprDivAll <string intr> {
+multiclass PatCorevGprGprDivAll<string intr> {
   def : PatCorevGprGpr<intr # "_div2", NAME # "_DIV2">;
   def : PatCorevGprGpr<intr # "_div4", NAME # "_DIV4">;
   def : PatCorevGprGpr<intr # "_div8", NAME # "_DIV8">;
 }
 
-multiclass PatCorevGprGprDivAll2 <Intrinsic intr> {
+multiclass PatCorevGprGprDivAll2<Intrinsic intr> {
   def : PatCorevGprGprDiv<intr, NAME # "_DIV2", 2>;
   def : PatCorevGprGprDiv<intr, NAME # "_DIV4", 4>;
   def : PatCorevGprGprDiv<intr, NAME # "_DIV8", 8>;
 }
 
-class PatCorevGpr <string intr, string asm> :
+class PatCorevGpr<string intr, string asm> :
   PatGpr<!cast<Intrinsic>("int_riscv_cv_" # intr), 
             !cast<RVInst>("CV_" # asm)>;
 
-multiclass PatCorevGprHB <string intr> {
+multiclass PatCorevGprHB<string intr> {
   def : PatCorevGpr<intr # "_h", NAME # "_H">;
   def : PatCorevGpr<intr # "_b", NAME # "_B">;
 }
 
-multiclass PatCorevBinary <string intr, bit exclude_h = false> {
+multiclass PatCorevBinary<string intr, bit exclude_h = false> {
   if exclude_h then {
     def : PatCorevGprGpr<intr # "_b", NAME # "_B">;
   } else {
@@ -849,7 +855,7 @@ multiclass PatCorevBinary <string intr, bit exclude_h = false> {
   defm NAME # "_SCI" : PatCorevGprImmHB<intr # "_sc">;
 }
 
-multiclass PatCorevBinaryUnsigned <string intr> {
+multiclass PatCorevBinaryUnsigned<string intr> {
   defm NAME : PatCorevGprGprHB<intr>;
   defm NAME # "_SC" : PatCorevGprGprHB<intr # "_sc">;
   defm NAME # "_SCI" : PatCorevGprUImmHB<intr # "_sc">;
@@ -885,9 +891,9 @@ let Predicates = [HasExtXCoreVSIMD] in {
 
   defm EXTRACT :  PatCorevGprImmHB<"extract">;
   defm EXTRACTU : PatCorevGprImmHB<"extractu">;
-  def : Pat<(int_riscv_cv_insert_b GPR:$rd, GPR:$rs1, GPR:$imm), 
+  def : Pat<(int_riscv_cv_insert_b GPR:$rd, GPR:$rs1, i8simm6:$imm), 
             (CV_INSERT_B GPR:$rd, GPR:$rs1, simm6:$imm)>;
-  def : Pat<(int_riscv_cv_insert_h GPR:$rd, GPR:$rs1, GPR:$imm), 
+  def : Pat<(int_riscv_cv_insert_h GPR:$rd, GPR:$rs1, (i8 ti8simm6:$imm)), 
             (CV_INSERT_H GPR:$rd, GPR:$rs1, simm6:$imm)>;
 
   defm SHUFFLE : PatCorevGprGprHB<"shuffle">;

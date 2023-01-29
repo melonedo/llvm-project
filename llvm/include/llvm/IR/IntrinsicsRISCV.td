@@ -1587,47 +1587,46 @@ class ScalarCoreVSimdGprIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 
-class ScalarCoreVSimdGprGprIntrinsic
-    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
+class ScalarCoreVSimdGprGprIntrinsic<LLVMType type>
+    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, type],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 
 class ScalarCoreVSimdGprGprImmIntrinsic
-    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i8_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
 
 // Setting immarg will make LLVM classify the argument as TargetConstant,
 // preventing conditional selection.
-class ScalarCoreVSimdGprImmIntrinsic
-    : ScalarCoreVSimdGprGprIntrinsic;
+class ScalarCoreVSimdGprImmIntrinsic<LLVMType type>
+    : ScalarCoreVSimdGprGprIntrinsic<type>;
 
 multiclass ScalarCoreVSimdGprIntrinsicHB {
   def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprIntrinsic;
   def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprIntrinsic;
 }
 
-multiclass ScalarCoreVSimdGprGprIntrinsicHB {
-  def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprGprIntrinsic;
-  def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic;
-}
-
-multiclass ScalarCoreVSimdGprGprIntrinsicDiv {
-  def int_riscv_cv_ # NAME # _div2 : ScalarCoreVSimdGprGprIntrinsic;
-  def int_riscv_cv_ # NAME # _div4 : ScalarCoreVSimdGprGprIntrinsic;
-  def int_riscv_cv_ # NAME # _div8 : ScalarCoreVSimdGprGprIntrinsic;
+multiclass ScalarCoreVSimdGprGprIntrinsicHB<bit scalar> {
+  if scalar then {
+    def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprGprIntrinsic<llvm_i16_ty>;
+    def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic<llvm_i8_ty>;
+  } else {
+    def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprGprIntrinsic<llvm_i32_ty>;
+    def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic<llvm_i32_ty>;
+  }
 }
 
 multiclass ScalarCoreVSimdGprImmIntrinsicHB {
-  def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprImmIntrinsic;
-  def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprImmIntrinsic;
+  def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprImmIntrinsic<llvm_i16_ty>;
+  def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
 }
 
 multiclass CoreVSimdBinary <bit exclude_h = false> {
   if exclude_h then {
-    def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic;
+    def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic<llvm_i32_ty>;
   } else {
-    defm NAME : ScalarCoreVSimdGprGprIntrinsicHB;
+    defm NAME : ScalarCoreVSimdGprGprIntrinsicHB<false>;
   }
-  defm NAME # _sc : ScalarCoreVSimdGprGprIntrinsicHB;
+  defm NAME # _sc : ScalarCoreVSimdGprGprIntrinsicHB<true>;
 }
 
 let TargetPrefix = "riscv" in {
@@ -1657,22 +1656,24 @@ defm sdotup : CoreVSimdBinary;
 defm sdotusp : CoreVSimdBinary;
 defm sdotsp : CoreVSimdBinary;
 
-defm extract : ScalarCoreVSimdGprImmIntrinsicHB;
-defm extractu : ScalarCoreVSimdGprImmIntrinsicHB;
+def int_riscv_cv_extract_b : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
+def int_riscv_cv_extract_h : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
+def int_riscv_cv_extractu_b : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
+def int_riscv_cv_extractu_h : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
 def int_riscv_cv_insert_b : ScalarCoreVSimdGprGprImmIntrinsic;
 def int_riscv_cv_insert_h : ScalarCoreVSimdGprGprImmIntrinsic;
 
 
-defm shuffle : ScalarCoreVSimdGprGprIntrinsicHB;
-def int_riscv_cv_shuffle_sci_h : ScalarCoreVSimdGprImmIntrinsic;
-def int_riscv_cv_shuffleI0_sci_b : ScalarCoreVSimdGprImmIntrinsic;
-def int_riscv_cv_shuffleI1_sci_b : ScalarCoreVSimdGprImmIntrinsic;
-def int_riscv_cv_shuffleI2_sci_b : ScalarCoreVSimdGprImmIntrinsic;
-def int_riscv_cv_shuffleI3_sci_b : ScalarCoreVSimdGprImmIntrinsic;
-defm shuffle2 : ScalarCoreVSimdGprGprIntrinsicHB;
+defm shuffle : ScalarCoreVSimdGprGprIntrinsicHB<false>;
+def int_riscv_cv_shuffle_sci_h : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
+def int_riscv_cv_shuffleI0_sci_b : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
+def int_riscv_cv_shuffleI1_sci_b : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
+def int_riscv_cv_shuffleI2_sci_b : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
+def int_riscv_cv_shuffleI3_sci_b : ScalarCoreVSimdGprImmIntrinsic<llvm_i8_ty>;
+defm shuffle2 : ScalarCoreVSimdGprGprIntrinsicHB<false>;
 
-def int_riscv_cv_pack : ScalarCoreVSimdGprGprIntrinsic;
-def int_riscv_cv_pack_h : ScalarCoreVSimdGprGprIntrinsic;
+def int_riscv_cv_pack : ScalarCoreVSimdGprGprIntrinsic<llvm_i32_ty>;
+def int_riscv_cv_pack_h : ScalarCoreVSimdGprGprIntrinsic<llvm_i32_ty>;
 def int_riscv_cv_packhi_b : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
                                       [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 def int_riscv_cv_packlo_b : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
