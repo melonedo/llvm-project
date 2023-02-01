@@ -185,7 +185,7 @@ multiclass SIMD_BinaryUnsigned<bits<6> funct6, bits<1> funct1, string mnemonic> 
 }
 
 
-let Predicates = [HasExtXCoreVSIMD], hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
+let Predicates = [HasExtXCoreVSIMD, IsRV32], hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
   defm ADD :    SIMD_BinarySigned<0b000000, 0, "add">;
   defm SUB :    SIMD_BinarySigned<0b000010, 0, "sub">;
   defm AVG :    SIMD_BinarySigned<0b000100, 0, "avg">;
@@ -869,7 +869,7 @@ multiclass PatCorevBinaryUnsigned <string intr> {
 }
 
 
-let Predicates = [HasExtXCoreVSIMD] in {
+let Predicates = [HasExtXCoreVSIMD, IsRV32] in {
   defm ADD :  PatCorevBinary<"add", true>;
   def : PatCorevGprGprDiv<int_riscv_cv_add_h, "ADD_H", 1>;
   defm SUB :  PatCorevBinary<"sub", true>;
