@@ -1591,6 +1591,10 @@ class ScalarCoreVSimdGprGprIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 
+class ScalarCoreVSimdGprGprGprIntrinsic
+    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+                [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
+
 class ScalarCoreVSimdGprGprImmIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
@@ -1673,10 +1677,8 @@ defm shuffle2 : ScalarCoreVSimdGprGprIntrinsicHB;
 
 def int_riscv_cv_pack : ScalarCoreVSimdGprGprIntrinsic;
 def int_riscv_cv_pack_h : ScalarCoreVSimdGprGprIntrinsic;
-def int_riscv_cv_packhi_b : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
-                                      [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
-def int_riscv_cv_packlo_b : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
-                                      [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
+def int_riscv_cv_packhi_b : ScalarCoreVSimdGprGprGprIntrinsic;
+def int_riscv_cv_packlo_b : ScalarCoreVSimdGprGprGprIntrinsic;
 
 defm cmpeq : CoreVSimdBinary;
 defm cmpne : CoreVSimdBinary;

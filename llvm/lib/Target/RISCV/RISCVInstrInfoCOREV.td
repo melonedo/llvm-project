@@ -69,6 +69,19 @@ def cv_uimm12 : Operand<XLenVT>,
   let OperandNamespace = "RISCVOp";
 }
 
+def cv_tsimm6 : Operand<XLenVT>, TImmLeaf<XLenVT, [{return isInt<6>(Imm);}]> {
+  let ParserMatchClass = SImmAsmOperand<6>;
+  let EncoderMethod = "getImmOpValue";
+  let DecoderMethod = "decodeSImmOperand<6>";
+  let OperandType = "OPERAND_SIMM6";
+  let OperandNamespace = "RISCVOp";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (MCOp.evaluateAsConstantImm(Imm))
+      return isInt<6>(Imm);
+    return MCOp.isBareSymbolRef();
+  }];
+}
 
 //===----------------------------------------------------------------------===//
 // CORE-V specific instructions
@@ -208,9 +221,9 @@ let Predicates = [HasExtXCoreVSIMD], hasSideEffects = 0, mayLoad = 0, mayStore =
   def CV_EXTRACTU_B :   SIMDALU_ri<0b101110, 0b011, "cv.extractu.b">;
   let Constraints = "$rd = $rd_wb" in {
     def CV_INSERT_H : RVInstSIMDI<0b101110, 0b100, OPC_CUSTOM3, (outs GPR:$rd_wb),
-      (ins GPR:$rd, GPR:$rs1, simm6:$imm6), "cv.insert.h", "$rd, $rs1, $imm6">;
+      (ins GPR:$rd, GPR:$rs1, cv_tsimm6:$imm6), "cv.insert.h", "$rd, $rs1, $imm6">;
     def CV_INSERT_B : RVInstSIMDI<0b101110, 0b101, OPC_CUSTOM3, (outs GPR:$rd_wb),
-      (ins GPR:$rd, GPR:$rs1, simm6:$imm6), "cv.insert.b", "$rd, $rs1, $imm6">;
+      (ins GPR:$rd, GPR:$rs1, cv_tsimm6:$imm6), "cv.insert.b", "$rd, $rs1, $imm6">;
   }
 
   def CV_SHUFFLE_H :    SIMDALU_rr<0b110000, 0, 0b000, "cv.shuffle.h">;
@@ -885,10 +898,10 @@ let Predicates = [HasExtXCoreVSIMD] in {
 
   defm EXTRACT :  PatCorevGprImmHB<"extract">;
   defm EXTRACTU : PatCorevGprImmHB<"extractu">;
-  def : Pat<(int_riscv_cv_insert_b GPR:$rd, GPR:$rs1, GPR:$imm), 
-            (CV_INSERT_B GPR:$rd, GPR:$rs1, simm6:$imm)>;
-  def : Pat<(int_riscv_cv_insert_h GPR:$rd, GPR:$rs1, GPR:$imm), 
-            (CV_INSERT_H GPR:$rd, GPR:$rs1, simm6:$imm)>;
+  def : Pat<(int_riscv_cv_insert_b GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
+            (CV_INSERT_B GPR:$rd, GPR:$rs1, cv_tsimm6:$imm)>;
+  def : Pat<(int_riscv_cv_insert_h GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
+            (CV_INSERT_H GPR:$rd, GPR:$rs1, cv_tsimm6:$imm)>;
 
   defm SHUFFLE : PatCorevGprGprHB<"shuffle">;
   def : PatCorevGprImm<"shuffle_sci_h", "SHUFFLE_SCI_H">;
