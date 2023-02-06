@@ -1591,6 +1591,10 @@ class ScalarCoreVSimdGprGprIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 
+class ScalarCoreVSimdGprImmIntrinsic
+    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
+                [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<1>>]>;
+
 class ScalarCoreVSimdGprGprGprIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
@@ -1598,11 +1602,6 @@ class ScalarCoreVSimdGprGprGprIntrinsic
 class ScalarCoreVSimdGprGprImmIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
-
-// Setting immarg will make LLVM classify the argument as TargetConstant,
-// preventing conditional selection.
-class ScalarCoreVSimdGprImmIntrinsic
-    : ScalarCoreVSimdGprGprIntrinsic;
 
 multiclass ScalarCoreVSimdGprIntrinsicHB {
   def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprIntrinsic;
