@@ -805,20 +805,20 @@ let Predicates = [HasExtXCoreVMem] in {
 //===----------------------------------------------------------------------===//
 
 class PatCorevGprGpr <string intr, string asm> :
-  PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGprGpr<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm)>;
 
 class PatCorevGprTImm <string intr, string asm> :
-  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGprImm<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm), cv_tsimm6>;
 
 class PatCorevGprImm <string intr, string asm> :
-  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGprImm<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm), simm6>;
 
 // TODO: define uimm6
 class PatCorevGprUImm <string intr, string asm> :
-  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGprImm<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm), simm6>;
 
 multiclass PatCorevGprGprHB <string intr> {
@@ -858,7 +858,7 @@ multiclass PatCorevGprGprDivAll2 <Intrinsic intr> {
 }
 
 class PatCorevGpr <string intr, string asm> :
-  PatGpr<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGpr<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm)>;
 
 multiclass PatCorevGprHB <string intr> {
@@ -885,9 +885,9 @@ multiclass PatCorevBinaryUnsigned <string intr> {
 
 let Predicates = [HasExtXCoreVSIMD, IsRV32] in {
   defm ADD :  PatCorevBinary<"add", true>;
-  def : PatCorevGprGprDiv<int_riscv_cv_add_h, "ADD_H", 1>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_add_h, "ADD_H", 1>;
   defm SUB :  PatCorevBinary<"sub", true>;
-  def : PatCorevGprGprDiv<int_riscv_cv_sub_h, "SUB_H", 1>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_sub_h, "SUB_H", 1>;
   defm AVG :  PatCorevBinary<"avg">;
   defm AVGU : PatCorevBinary<"avgu">;
   defm MIN :  PatCorevBinary<"min">;
@@ -912,9 +912,9 @@ let Predicates = [HasExtXCoreVSIMD, IsRV32] in {
 
   defm EXTRACT :  PatCorevGprTImmHB<"extract">;
   defm EXTRACTU : PatCorevGprTImmHB<"extractu">;
-  def : Pat<(int_riscv_cv_insert_b GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
+  def : Pat<(int_riscv_cv_simd_insert_b GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
             (CV_INSERT_B GPR:$rd, GPR:$rs1, cv_tsimm6:$imm)>;
-  def : Pat<(int_riscv_cv_insert_h GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
+  def : Pat<(int_riscv_cv_simd_insert_h GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
             (CV_INSERT_H GPR:$rd, GPR:$rs1, cv_tsimm6:$imm)>;
 
   defm SHUFFLE : PatCorevGprGprHB<"shuffle">;
@@ -927,9 +927,9 @@ let Predicates = [HasExtXCoreVSIMD, IsRV32] in {
 
   def : PatCorevGprGpr<"pack", "PACK">;
   def : PatCorevGprGpr<"pack_h", "PACK_H">;
-  def : Pat<(int_riscv_cv_packhi_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
+  def : Pat<(int_riscv_cv_simd_packhi_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
             (CV_PACKHI_B GPR:$rd, GPR:$rs1, GPR:$rs2)>;
-  def : Pat<(int_riscv_cv_packlo_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
+  def : Pat<(int_riscv_cv_simd_packlo_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
             (CV_PACKLO_B GPR:$rd, GPR:$rs1, GPR:$rs2)>;
 
   defm CMPEQ :  PatCorevBinary<"cmpeq">;
@@ -943,18 +943,18 @@ let Predicates = [HasExtXCoreVSIMD, IsRV32] in {
   defm CMPLTU : PatCorevBinary<"cmpltu">;
   defm CMPLEU : PatCorevBinary<"cmpleu">;
   
-  def : PatCorevGprGprDiv<int_riscv_cv_cplxmul_r, "CPLXMUL_R", 1>;
-  defm CPLXMUL_R : PatCorevGprGprDivAll2<int_riscv_cv_cplxmul_r>;
-  def : PatCorevGprGprDiv<int_riscv_cv_cplxmul_i, "CPLXMUL_I", 1>;
-  defm CPLXMUL_I : PatCorevGprGprDivAll2<int_riscv_cv_cplxmul_i>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_cplxmul_r, "CPLXMUL_R", 1>;
+  defm CPLXMUL_R : PatCorevGprGprDivAll2<int_riscv_cv_simd_cplxmul_r>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_cplxmul_i, "CPLXMUL_I", 1>;
+  defm CPLXMUL_I : PatCorevGprGprDivAll2<int_riscv_cv_simd_cplxmul_i>;
 
   def : PatCorevGpr<"cplxconj", "CPLXCONJ">;
 
-  def : PatCorevGprGprDiv<int_riscv_cv_subrotmj, "SUBROTMJ", 1>;
-  defm SUBROTMJ : PatCorevGprGprDivAll2<int_riscv_cv_subrotmj>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_subrotmj, "SUBROTMJ", 1>;
+  defm SUBROTMJ : PatCorevGprGprDivAll2<int_riscv_cv_simd_subrotmj>;
 
-  defm ADD : PatCorevGprGprDivAll2<int_riscv_cv_add_h>;
-  defm SUB : PatCorevGprGprDivAll2<int_riscv_cv_sub_h>;
+  defm ADD : PatCorevGprGprDivAll2<int_riscv_cv_simd_add_h>;
+  defm SUB : PatCorevGprGprDivAll2<int_riscv_cv_simd_sub_h>;
 }
 
 //===----------------------------------------------------------------------===//

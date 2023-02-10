@@ -4,14 +4,14 @@
 
 ; Extra tests for packhi and packlo
 
-declare i32 @llvm.riscv.cv.packhi.b(i32, i32, i32)
+declare i32 @llvm.riscv.cv.simd.packhi.b(i32, i32, i32)
 
 define i32 @test.cv.packhi.b(i32 %a, i32 %b, i32 %c) {
 ; CHECK-LABEL: test.cv.packhi.b:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.packhi.b a0, a1, a2
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.packhi.b(i32 %a, i32 %b, i32 %c)
+  %1 = call i32 @llvm.riscv.cv.simd.packhi.b(i32 %a, i32 %b, i32 %c)
   ret i32 %1
 }
 
@@ -23,18 +23,18 @@ define i32 @test.cv.packhi.b2(i32 %a, i32 %b) {
 ; CHECK-NEXT:    li a0, 0
 ; CHECK-NEXT:    cv.packhi.b a0, a1, a2
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.packhi.b(i32 0, i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.simd.packhi.b(i32 0, i32 %a, i32 %b)
   ret i32 %1
 }
 
-declare i32 @llvm.riscv.cv.packlo.b(i32, i32, i32)
+declare i32 @llvm.riscv.cv.simd.packlo.b(i32, i32, i32)
 
 define i32 @test.cv.packlo.b(i32 %a, i32 %b, i32 %c) {
 ; CHECK-LABEL: test.cv.packlo.b:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.packlo.b a0, a1, a2
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.packlo.b(i32 %a, i32 %b, i32 %c)
+  %1 = call i32 @llvm.riscv.cv.simd.packlo.b(i32 %a, i32 %b, i32 %c)
   ret i32 %1
 }
 
@@ -46,7 +46,7 @@ define i32 @test.cv.packlo.b2(i32 %a, i32 %b) {
 ; CHECK-NEXT:    li a0, 0
 ; CHECK-NEXT:    cv.packlo.b a0, a1, a2
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.packlo.b(i32 0, i32 %a, i32 %b)
+  %1 = call i32 @llvm.riscv.cv.simd.packlo.b(i32 0, i32 %a, i32 %b)
   ret i32 %1
 }
 
@@ -60,7 +60,7 @@ define i32 @test.cv.packhi.and.packlo(i32 %a, i32 %b, i32 %c, i32 %d) {
 ; CHECK-NEXT:    cv.packhi.b a0, a3, a4
 ; CHECK-NEXT:    cv.packlo.b a0, a1, a2
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.packhi.b(i32 undef, i32 %d, i32 %c)
-  %2 = call i32 @llvm.riscv.cv.packlo.b(i32 %1, i32 %b, i32 %a)
+  %1 = call i32 @llvm.riscv.cv.simd.packhi.b(i32 undef, i32 %d, i32 %c)
+  %2 = call i32 @llvm.riscv.cv.simd.packlo.b(i32 %1, i32 %b, i32 %a)
   ret i32 %2
 }
