@@ -142,7 +142,7 @@ namespace clang {
   namespace RISCVCOREV {
   enum {
     LastRVVBuiltin = RISCVVector::FirstTSBuiltin - 1,
-#define BUILTIN(ID, TYPE, ATTRS) BI__builtin_corev_##ID,
+#define BUILTIN(ID, TYPE, ATTRS) BI__builtin_riscv_cv_##ID,
 #include "clang/Basic/BuiltinsRISCVCOREV.def"
     FirstTSBuiltin,
   };

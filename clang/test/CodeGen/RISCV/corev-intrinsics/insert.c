@@ -2,47 +2,41 @@
 // RUN: %clang_cc1 -triple riscv32 -target-feature +xcorevsimd -emit-llvm %s -o - \
 // RUN:     | FileCheck %s
 
-// Test __builtin_corev_insert_h/b
+// Test __builtin_riscv_cv_simd_insert_h/b
 
 #include <stdint.h>
 
 
 // CHECK-LABEL: @test_insert_h0(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca ptr, align 4
+// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i16, align 2
-// CHECK-NEXT:    store ptr [[DST:%.*]], ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[DST:%.*]], ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    store i16 [[A:%.*]], ptr [[A_ADDR]], align 2
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i16, ptr [[A_ADDR]], align 2
 // CHECK-NEXT:    [[CONV:%.*]] = zext i16 [[TMP1]] to i32
-// CHECK-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = call i32 @llvm.riscv.cv.insert.h(i32 [[TMP3]], i32 [[CONV]], i32 0)
-// CHECK-NEXT:    store i32 [[TMP4]], ptr [[TMP2]], align 4
-// CHECK-NEXT:    ret i32 [[TMP4]]
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.insert.h(i32 [[TMP0]], i32 [[CONV]], i32 0)
+// CHECK-NEXT:    ret i32 [[TMP2]]
 //
-uint32_t test_insert_h0(uint32_t *dst, uint16_t a) {
-	return __builtin_corev_insert_h(dst, a, 0);
+uint32_t test_insert_h0(uint32_t dst, uint16_t a) {
+	return __builtin_riscv_cv_simd_insert_h(dst, a, 0);
 }
 
 // CHECK-LABEL: @test_insert_h1(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca ptr, align 4
+// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i16, align 2
-// CHECK-NEXT:    store ptr [[DST:%.*]], ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[DST:%.*]], ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    store i16 [[A:%.*]], ptr [[A_ADDR]], align 2
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i16, ptr [[A_ADDR]], align 2
 // CHECK-NEXT:    [[CONV:%.*]] = zext i16 [[TMP1]] to i32
-// CHECK-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = call i32 @llvm.riscv.cv.insert.h(i32 [[TMP3]], i32 [[CONV]], i32 1)
-// CHECK-NEXT:    store i32 [[TMP4]], ptr [[TMP2]], align 4
-// CHECK-NEXT:    ret i32 [[TMP4]]
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.insert.h(i32 [[TMP0]], i32 [[CONV]], i32 1)
+// CHECK-NEXT:    ret i32 [[TMP2]]
 //
-uint32_t test_insert_h1(uint32_t *dst, uint16_t a) {
-	return __builtin_corev_insert_h(dst, a, 1);
+uint32_t test_insert_h1(uint32_t dst, uint16_t a) {
+	return __builtin_riscv_cv_simd_insert_h(dst, a, 1);
 }
 
 // CHECK-LABEL: @test_insert_h(
@@ -52,100 +46,88 @@ uint32_t test_insert_h1(uint32_t *dst, uint16_t a) {
 // CHECK-NEXT:    [[DST:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    store i16 [[A:%.*]], ptr [[A_ADDR]], align 2
 // CHECK-NEXT:    store i16 [[B:%.*]], ptr [[B_ADDR]], align 2
-// CHECK-NEXT:    [[TMP0:%.*]] = load i16, ptr [[A_ADDR]], align 2
-// CHECK-NEXT:    [[CONV:%.*]] = zext i16 [[TMP0]] to i32
-// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.insert.h(i32 [[TMP1]], i32 [[CONV]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i16, ptr [[A_ADDR]], align 2
+// CHECK-NEXT:    [[CONV:%.*]] = zext i16 [[TMP1]] to i32
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.insert.h(i32 [[TMP0]], i32 [[CONV]], i32 0)
 // CHECK-NEXT:    store i32 [[TMP2]], ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load i16, ptr [[B_ADDR]], align 2
-// CHECK-NEXT:    [[CONV1:%.*]] = zext i16 [[TMP3]] to i32
-// CHECK-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.cv.insert.h(i32 [[TMP4]], i32 [[CONV1]], i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[DST]], align 4
+// CHECK-NEXT:    [[TMP4:%.*]] = load i16, ptr [[B_ADDR]], align 2
+// CHECK-NEXT:    [[CONV1:%.*]] = zext i16 [[TMP4]] to i32
+// CHECK-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.cv.simd.insert.h(i32 [[TMP3]], i32 [[CONV1]], i32 1)
 // CHECK-NEXT:    store i32 [[TMP5]], ptr [[DST]], align 4
 // CHECK-NEXT:    [[TMP6:%.*]] = load i32, ptr [[DST]], align 4
 // CHECK-NEXT:    ret i32 [[TMP6]]
 //
 uint32_t test_insert_h(uint16_t a, uint16_t b) {
     uint32_t dst;
-	__builtin_corev_insert_h(&dst, a, 0);
-	__builtin_corev_insert_h(&dst, b, 1);
+	dst = __builtin_riscv_cv_simd_insert_h(dst, a, 0);
+	dst = __builtin_riscv_cv_simd_insert_h(dst, b, 1);
     return dst;
 }
 
 // CHECK-LABEL: @test_insert_b0(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca ptr, align 4
+// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i8, align 1
-// CHECK-NEXT:    store ptr [[DST:%.*]], ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[DST:%.*]], ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    store i8 [[A:%.*]], ptr [[A_ADDR]], align 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i8, ptr [[A_ADDR]], align 1
 // CHECK-NEXT:    [[CONV:%.*]] = zext i8 [[TMP1]] to i32
-// CHECK-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = call i32 @llvm.riscv.cv.insert.b(i32 [[TMP3]], i32 [[CONV]], i32 0)
-// CHECK-NEXT:    store i32 [[TMP4]], ptr [[TMP2]], align 4
-// CHECK-NEXT:    ret i32 [[TMP4]]
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.insert.b(i32 [[TMP0]], i32 [[CONV]], i32 0)
+// CHECK-NEXT:    ret i32 [[TMP2]]
 //
-uint32_t test_insert_b0(uint32_t *dst, uint8_t a) {
-	return __builtin_corev_insert_b(dst, a, 0);
+uint32_t test_insert_b0(uint32_t dst, uint8_t a) {
+	return __builtin_riscv_cv_simd_insert_b(dst, a, 0);
 }
 
 // CHECK-LABEL: @test_insert_b1(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca ptr, align 4
+// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i8, align 1
-// CHECK-NEXT:    store ptr [[DST:%.*]], ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[DST:%.*]], ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    store i8 [[A:%.*]], ptr [[A_ADDR]], align 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i8, ptr [[A_ADDR]], align 1
 // CHECK-NEXT:    [[CONV:%.*]] = zext i8 [[TMP1]] to i32
-// CHECK-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = call i32 @llvm.riscv.cv.insert.b(i32 [[TMP3]], i32 [[CONV]], i32 1)
-// CHECK-NEXT:    store i32 [[TMP4]], ptr [[TMP2]], align 4
-// CHECK-NEXT:    ret i32 [[TMP4]]
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.insert.b(i32 [[TMP0]], i32 [[CONV]], i32 1)
+// CHECK-NEXT:    ret i32 [[TMP2]]
 //
-uint32_t test_insert_b1(uint32_t *dst, uint8_t a) {
-	return __builtin_corev_insert_b(dst, a, 1);
+uint32_t test_insert_b1(uint32_t dst, uint8_t a) {
+	return __builtin_riscv_cv_simd_insert_b(dst, a, 1);
 }
 
 // CHECK-LABEL: @test_insert_b2(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca ptr, align 4
+// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i8, align 1
-// CHECK-NEXT:    store ptr [[DST:%.*]], ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[DST:%.*]], ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    store i8 [[A:%.*]], ptr [[A_ADDR]], align 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i8, ptr [[A_ADDR]], align 1
 // CHECK-NEXT:    [[CONV:%.*]] = zext i8 [[TMP1]] to i32
-// CHECK-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = call i32 @llvm.riscv.cv.insert.b(i32 [[TMP3]], i32 [[CONV]], i32 2)
-// CHECK-NEXT:    store i32 [[TMP4]], ptr [[TMP2]], align 4
-// CHECK-NEXT:    ret i32 [[TMP4]]
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.insert.b(i32 [[TMP0]], i32 [[CONV]], i32 2)
+// CHECK-NEXT:    ret i32 [[TMP2]]
 //
-uint32_t test_insert_b2(uint32_t *dst, uint8_t a) {
-	return __builtin_corev_insert_b(dst, a, 2);
+uint32_t test_insert_b2(uint32_t dst, uint8_t a) {
+	return __builtin_riscv_cv_simd_insert_b(dst, a, 2);
 }
 
 // CHECK-LABEL: @test_insert_b3(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca ptr, align 4
+// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i8, align 1
-// CHECK-NEXT:    store ptr [[DST:%.*]], ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[DST:%.*]], ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    store i8 [[A:%.*]], ptr [[A_ADDR]], align 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i8, ptr [[A_ADDR]], align 1
 // CHECK-NEXT:    [[CONV:%.*]] = zext i8 [[TMP1]] to i32
-// CHECK-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = call i32 @llvm.riscv.cv.insert.b(i32 [[TMP3]], i32 [[CONV]], i32 3)
-// CHECK-NEXT:    store i32 [[TMP4]], ptr [[TMP2]], align 4
-// CHECK-NEXT:    ret i32 [[TMP4]]
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.insert.b(i32 [[TMP0]], i32 [[CONV]], i32 3)
+// CHECK-NEXT:    ret i32 [[TMP2]]
 //
-uint32_t test_insert_b3(uint32_t *dst, uint8_t a) {
-	return __builtin_corev_insert_b(dst, a, 3);
+uint32_t test_insert_b3(uint32_t dst, uint8_t a) {
+	return __builtin_riscv_cv_simd_insert_b(dst, a, 3);
 }
 
 // CHECK-LABEL: @test_insert_b(
@@ -159,34 +141,34 @@ uint32_t test_insert_b3(uint32_t *dst, uint8_t a) {
 // CHECK-NEXT:    store i8 [[B:%.*]], ptr [[B_ADDR]], align 1
 // CHECK-NEXT:    store i8 [[C:%.*]], ptr [[C_ADDR]], align 1
 // CHECK-NEXT:    store i8 [[D:%.*]], ptr [[D_ADDR]], align 1
-// CHECK-NEXT:    [[TMP0:%.*]] = load i8, ptr [[A_ADDR]], align 1
-// CHECK-NEXT:    [[CONV:%.*]] = zext i8 [[TMP0]] to i32
-// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.insert.b(i32 [[TMP1]], i32 [[CONV]], i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i8, ptr [[A_ADDR]], align 1
+// CHECK-NEXT:    [[CONV:%.*]] = zext i8 [[TMP1]] to i32
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.insert.b(i32 [[TMP0]], i32 [[CONV]], i32 0)
 // CHECK-NEXT:    store i32 [[TMP2]], ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load i8, ptr [[B_ADDR]], align 1
-// CHECK-NEXT:    [[CONV1:%.*]] = zext i8 [[TMP3]] to i32
-// CHECK-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.cv.insert.b(i32 [[TMP4]], i32 [[CONV1]], i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[DST]], align 4
+// CHECK-NEXT:    [[TMP4:%.*]] = load i8, ptr [[B_ADDR]], align 1
+// CHECK-NEXT:    [[CONV1:%.*]] = zext i8 [[TMP4]] to i32
+// CHECK-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.cv.simd.insert.b(i32 [[TMP3]], i32 [[CONV1]], i32 1)
 // CHECK-NEXT:    store i32 [[TMP5]], ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP6:%.*]] = load i8, ptr [[C_ADDR]], align 1
-// CHECK-NEXT:    [[CONV2:%.*]] = zext i8 [[TMP6]] to i32
-// CHECK-NEXT:    [[TMP7:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP8:%.*]] = call i32 @llvm.riscv.cv.insert.b(i32 [[TMP7]], i32 [[CONV2]], i32 2)
+// CHECK-NEXT:    [[TMP6:%.*]] = load i32, ptr [[DST]], align 4
+// CHECK-NEXT:    [[TMP7:%.*]] = load i8, ptr [[C_ADDR]], align 1
+// CHECK-NEXT:    [[CONV2:%.*]] = zext i8 [[TMP7]] to i32
+// CHECK-NEXT:    [[TMP8:%.*]] = call i32 @llvm.riscv.cv.simd.insert.b(i32 [[TMP6]], i32 [[CONV2]], i32 2)
 // CHECK-NEXT:    store i32 [[TMP8]], ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP9:%.*]] = load i8, ptr [[D_ADDR]], align 1
-// CHECK-NEXT:    [[CONV3:%.*]] = zext i8 [[TMP9]] to i32
-// CHECK-NEXT:    [[TMP10:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP11:%.*]] = call i32 @llvm.riscv.cv.insert.b(i32 [[TMP10]], i32 [[CONV3]], i32 3)
+// CHECK-NEXT:    [[TMP9:%.*]] = load i32, ptr [[DST]], align 4
+// CHECK-NEXT:    [[TMP10:%.*]] = load i8, ptr [[D_ADDR]], align 1
+// CHECK-NEXT:    [[CONV3:%.*]] = zext i8 [[TMP10]] to i32
+// CHECK-NEXT:    [[TMP11:%.*]] = call i32 @llvm.riscv.cv.simd.insert.b(i32 [[TMP9]], i32 [[CONV3]], i32 3)
 // CHECK-NEXT:    store i32 [[TMP11]], ptr [[DST]], align 4
 // CHECK-NEXT:    [[TMP12:%.*]] = load i32, ptr [[DST]], align 4
 // CHECK-NEXT:    ret i32 [[TMP12]]
 //
 uint32_t test_insert_b(uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
     uint32_t dst;
-	__builtin_corev_insert_b(&dst, a, 0);
-	__builtin_corev_insert_b(&dst, b, 1);
-	__builtin_corev_insert_b(&dst, c, 2);
-	__builtin_corev_insert_b(&dst, d, 3);
+	dst = __builtin_riscv_cv_simd_insert_b(dst, a, 0);
+	dst = __builtin_riscv_cv_simd_insert_b(dst, b, 1);
+	dst = __builtin_riscv_cv_simd_insert_b(dst, c, 2);
+	dst = __builtin_riscv_cv_simd_insert_b(dst, d, 3);
     return dst;
 }

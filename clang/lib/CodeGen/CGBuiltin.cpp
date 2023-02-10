@@ -19354,6 +19354,17 @@ Value *CodeGenFunction::EmitHexagonBuiltinExpr(unsigned BuiltinID,
   return nullptr;
 }
 
+static Value *EmitCoreVIntrinsic(CodeGenFunction &CGF, unsigned IntrinsicID, MutableArrayRef<Value *> Ops) {
+  llvm::Type *MachineType = llvm::IntegerType::getInt32Ty(CGF.CGM.getLLVMContext());
+  for (Value *&Op : Ops) {
+    if (Op->getType() != MachineType) {
+      Op = CGF.Builder.CreateZExt(Op, MachineType);
+    }
+  }
+  llvm::Function *F = CGF.CGM.getIntrinsic(IntrinsicID);
+  return CGF.Builder.CreateCall(F, Ops);
+}
+
 Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
                                              const CallExpr *E,
                                              ReturnValueSlot ReturnValue) {
@@ -19577,33 +19588,11 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
     break;
   
   // CoreV
-#define BUILTIN(NAME, TYPE, ATTRS)           \
-  case RISCVCOREV::BI__builtin_corev_##NAME: \
-    ID = Intrinsic::riscv_cv_##NAME;         \
-    break;
-#define TARGET_DATA_ONLY_BUILTIN(NAME, TYPE, ATTRS, FEATURE) 
+#define BUILTIN(NAME, TYPE, ATTRS)              \
+  case RISCVCOREV::BI__builtin_riscv_cv_##NAME: \
+    ID = Intrinsic::riscv_cv_##NAME;            \
+    return EmitCoreVIntrinsic(*this, ID, Ops);
 #include "clang/Basic/BuiltinsRISCVCOREV.def"
-
-  case RISCVCOREV::BI__builtin_corev_packhi_b:
-    ID = Intrinsic::riscv_cv_packhi_b;
-    goto emit_loadstore;
-  case RISCVCOREV::BI__builtin_corev_packlo_b:
-    ID = Intrinsic::riscv_cv_packlo_b;
-    goto emit_loadstore;
-  case RISCVCOREV::BI__builtin_corev_insert_h:
-    ID = Intrinsic::riscv_cv_insert_h;
-    goto emit_loadstore;
-  case RISCVCOREV::BI__builtin_corev_insert_b:
-    ID = Intrinsic::riscv_cv_insert_b;
-emit_loadstore:
-    {
-      llvm::Function *F = CGM.getIntrinsic(ID);
-      Address addr = EmitPointerWithAlignment(E->getArg(0));
-      llvm::LoadInst *load = Builder.CreateLoad(addr);
-      llvm::CallInst *ret = Builder.CreateCall(F, {load, Ops[1], Ops[2]});
-      Builder.CreateStore(ret, addr);
-      return ret;
-    }
 
     // Vector builtins are handled from here.
 #include "clang/Basic/riscv_vector_builtin_cg.inc"

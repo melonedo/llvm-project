@@ -2,91 +2,75 @@
 // RUN: %clang_cc1 -triple riscv32 -target-feature +xcorevsimd -emit-llvm %s -o - \
 // RUN:     | FileCheck %s
 
-// Test __builtin_corev_packhi/lo
+// Test __builtin_riscv_cv_simd_packhi/lo
 
 #include <stdint.h>
 
 
 // CHECK-LABEL: @test_packhi_b(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca ptr, align 4
+// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
-// CHECK-NEXT:    store ptr [[DST:%.*]], ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[DST:%.*]], ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
 // CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[A_ADDR]], align 4
 // CHECK-NEXT:    [[TMP2:%.*]] = load i32, ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = load i32, ptr [[TMP3]], align 4
-// CHECK-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.cv.packhi.b(i32 [[TMP4]], i32 [[TMP1]], i32 [[TMP2]])
-// CHECK-NEXT:    store i32 [[TMP5]], ptr [[TMP3]], align 4
-// CHECK-NEXT:    ret i32 [[TMP5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = call i32 @llvm.riscv.cv.simd.packhi.b(i32 [[TMP0]], i32 [[TMP1]], i32 [[TMP2]])
+// CHECK-NEXT:    ret i32 [[TMP3]]
 //
-uint32_t test_packhi_b(uint32_t *dst, uint32_t a, uint32_t b) {
-	return __builtin_corev_packhi_b(dst, a, b);
+uint32_t test_packhi_b(uint32_t dst, uint32_t a, uint32_t b) {
+	return __builtin_riscv_cv_simd_packhi_b(dst, a, b);
 }
 
 // CHECK-LABEL: @test_packhi_b0(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
-// CHECK-NEXT:    [[DST:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
 // CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    store i32 0, ptr [[DST]], align 4
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    [[TMP2:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = call i32 @llvm.riscv.cv.packhi.b(i32 [[TMP2]], i32 [[TMP0]], i32 [[TMP1]])
-// CHECK-NEXT:    store i32 [[TMP3]], ptr [[DST]], align 4
-// CHECK-NEXT:    ret i32 [[TMP3]]
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.packhi.b(i32 0, i32 [[TMP0]], i32 [[TMP1]])
+// CHECK-NEXT:    ret i32 [[TMP2]]
 //
 uint32_t test_packhi_b0(uint32_t a, uint32_t b) {
-    uint32_t dst = 0;
-	return __builtin_corev_packhi_b(&dst, a, b);
+	return __builtin_riscv_cv_simd_packhi_b(0, a, b);
 }
 
 // CHECK-LABEL: @test_packlo_b(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca ptr, align 4
+// CHECK-NEXT:    [[DST_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
-// CHECK-NEXT:    store ptr [[DST:%.*]], ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    store i32 [[DST:%.*]], ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
 // CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[A_ADDR]], align 4
 // CHECK-NEXT:    [[TMP2:%.*]] = load i32, ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load ptr, ptr [[DST_ADDR]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = load i32, ptr [[TMP3]], align 4
-// CHECK-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.cv.packlo.b(i32 [[TMP4]], i32 [[TMP1]], i32 [[TMP2]])
-// CHECK-NEXT:    store i32 [[TMP5]], ptr [[TMP3]], align 4
-// CHECK-NEXT:    ret i32 [[TMP5]]
+// CHECK-NEXT:    [[TMP3:%.*]] = call i32 @llvm.riscv.cv.simd.packlo.b(i32 [[TMP0]], i32 [[TMP1]], i32 [[TMP2]])
+// CHECK-NEXT:    ret i32 [[TMP3]]
 //
-uint32_t test_packlo_b(uint32_t *dst, uint32_t a, uint32_t b) {
-	return __builtin_corev_packlo_b(dst,a, b);
+uint32_t test_packlo_b(uint32_t dst, uint32_t a, uint32_t b) {
+	return __builtin_riscv_cv_simd_packlo_b(dst,a, b);
 }
 
 // CHECK-LABEL: @test_packlo_b0(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    [[B_ADDR:%.*]] = alloca i32, align 4
-// CHECK-NEXT:    [[DST:%.*]] = alloca i32, align 4
 // CHECK-NEXT:    store i32 [[A:%.*]], ptr [[A_ADDR]], align 4
 // CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    store i32 0, ptr [[DST]], align 4
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[A_ADDR]], align 4
 // CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    [[TMP2:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = call i32 @llvm.riscv.cv.packlo.b(i32 [[TMP2]], i32 [[TMP0]], i32 [[TMP1]])
-// CHECK-NEXT:    store i32 [[TMP3]], ptr [[DST]], align 4
-// CHECK-NEXT:    ret i32 [[TMP3]]
+// CHECK-NEXT:    [[TMP2:%.*]] = call i32 @llvm.riscv.cv.simd.packlo.b(i32 0, i32 [[TMP0]], i32 [[TMP1]])
+// CHECK-NEXT:    ret i32 [[TMP2]]
 //
 uint32_t test_packlo_b0(uint32_t a, uint32_t b) {
-    uint32_t dst = 0;
-	return __builtin_corev_packlo_b(&dst, a, b);
+	return __builtin_riscv_cv_simd_packlo_b(0, a, b);
 }
 
 // CHECK-LABEL: @test_pack(
@@ -100,22 +84,22 @@ uint32_t test_packlo_b0(uint32_t a, uint32_t b) {
 // CHECK-NEXT:    store i32 [[B:%.*]], ptr [[B_ADDR]], align 4
 // CHECK-NEXT:    store i32 [[C:%.*]], ptr [[C_ADDR]], align 4
 // CHECK-NEXT:    store i32 [[D:%.*]], ptr [[D_ADDR]], align 4
-// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[D_ADDR]], align 4
-// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[C_ADDR]], align 4
-// CHECK-NEXT:    [[TMP2:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = call i32 @llvm.riscv.cv.packhi.b(i32 [[TMP2]], i32 [[TMP0]], i32 [[TMP1]])
+// CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[DST]], align 4
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr [[D_ADDR]], align 4
+// CHECK-NEXT:    [[TMP2:%.*]] = load i32, ptr [[C_ADDR]], align 4
+// CHECK-NEXT:    [[TMP3:%.*]] = call i32 @llvm.riscv.cv.simd.packhi.b(i32 [[TMP0]], i32 [[TMP1]], i32 [[TMP2]])
 // CHECK-NEXT:    store i32 [[TMP3]], ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP4:%.*]] = load i32, ptr [[B_ADDR]], align 4
-// CHECK-NEXT:    [[TMP5:%.*]] = load i32, ptr [[A_ADDR]], align 4
-// CHECK-NEXT:    [[TMP6:%.*]] = load i32, ptr [[DST]], align 4
-// CHECK-NEXT:    [[TMP7:%.*]] = call i32 @llvm.riscv.cv.packlo.b(i32 [[TMP6]], i32 [[TMP4]], i32 [[TMP5]])
+// CHECK-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DST]], align 4
+// CHECK-NEXT:    [[TMP5:%.*]] = load i32, ptr [[B_ADDR]], align 4
+// CHECK-NEXT:    [[TMP6:%.*]] = load i32, ptr [[A_ADDR]], align 4
+// CHECK-NEXT:    [[TMP7:%.*]] = call i32 @llvm.riscv.cv.simd.packlo.b(i32 [[TMP4]], i32 [[TMP5]], i32 [[TMP6]])
 // CHECK-NEXT:    store i32 [[TMP7]], ptr [[DST]], align 4
 // CHECK-NEXT:    [[TMP8:%.*]] = load i32, ptr [[DST]], align 4
 // CHECK-NEXT:    ret i32 [[TMP8]]
 //
 uint32_t test_pack(uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
     uint32_t dst;
-	__builtin_corev_packhi_b(&dst, d, c);
-	__builtin_corev_packlo_b(&dst, b, a);
+	dst = __builtin_riscv_cv_simd_packhi_b(dst, d, c);
+	dst = __builtin_riscv_cv_simd_packlo_b(dst, b, a);
     return dst;
 }
