@@ -4,14 +4,14 @@
 
 ; Extra tests for insert.b and insert.h
 
-declare i32 @llvm.riscv.cv.insert.b(i32, i32, i32)
+declare i32 @llvm.riscv.cv.simd.insert.b(i32, i32, i32)
 
 define i32 @test.cv.insert.b0(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.insert.b0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.insert.b a0, a1, 0
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.b(i32 %a, i32 %b, i32 0)
+  %1 = call i32 @llvm.riscv.cv.simd.insert.b(i32 %a, i32 %b, i32 0)
   ret i32 %1
 }
 
@@ -20,7 +20,7 @@ define i32 @test.cv.insert.b1(i32 %a, i32 %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.insert.b a0, a1, 1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.b(i32 %a, i32 %b, i32 1)
+  %1 = call i32 @llvm.riscv.cv.simd.insert.b(i32 %a, i32 %b, i32 1)
   ret i32 %1
 }
 
@@ -34,21 +34,21 @@ define i32 @test.cv.insert.b(i32 %a, i32 %b, i32 %c, i32 %d) {
 ; CHECK-NEXT:    cv.insert.b a0, a2, 2
 ; CHECK-NEXT:    cv.insert.b a0, a3, 3
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.b(i32 undef, i32 %a, i32 0)
-  %2 = call i32 @llvm.riscv.cv.insert.b(i32 %1, i32 %b, i32 1)
-  %3 = call i32 @llvm.riscv.cv.insert.b(i32 %2, i32 %c, i32 2)
-  %4 = call i32 @llvm.riscv.cv.insert.b(i32 %3, i32 %d, i32 3)
+  %1 = call i32 @llvm.riscv.cv.simd.insert.b(i32 undef, i32 %a, i32 0)
+  %2 = call i32 @llvm.riscv.cv.simd.insert.b(i32 %1, i32 %b, i32 1)
+  %3 = call i32 @llvm.riscv.cv.simd.insert.b(i32 %2, i32 %c, i32 2)
+  %4 = call i32 @llvm.riscv.cv.simd.insert.b(i32 %3, i32 %d, i32 3)
   ret i32 %4
 }
 
-declare i32 @llvm.riscv.cv.insert.h(i32, i32, i32)
+declare i32 @llvm.riscv.cv.simd.insert.h(i32, i32, i32)
 
 define i32 @test.cv.insert.h0(i32 %a, i32 %b) {
 ; CHECK-LABEL: test.cv.insert.h0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.insert.h a0, a1, 0
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.h(i32 %a, i32 %b, i32 0)
+  %1 = call i32 @llvm.riscv.cv.simd.insert.h(i32 %a, i32 %b, i32 0)
   ret i32 %1
 }
 
@@ -57,7 +57,7 @@ define i32 @test.cv.insert.h1(i32 %a, i32 %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cv.insert.h a0, a1, 1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.h(i32 %a, i32 %b, i32 1)
+  %1 = call i32 @llvm.riscv.cv.simd.insert.h(i32 %a, i32 %b, i32 1)
   ret i32 %1
 }
 
@@ -69,7 +69,7 @@ define i32 @test.cv.insert.h(i32 %a, i32 %b) {
 ; CHECK-NEXT:    cv.insert.h a0, a2, 0
 ; CHECK-NEXT:    cv.insert.h a0, a1, 1
 ; CHECK-NEXT:    ret
-  %1 = call i32 @llvm.riscv.cv.insert.h(i32 undef, i32 %a, i32 0)
-  %2 = call i32 @llvm.riscv.cv.insert.h(i32 %1, i32 %b, i32 1)
+  %1 = call i32 @llvm.riscv.cv.simd.insert.h(i32 undef, i32 %a, i32 0)
+  %2 = call i32 @llvm.riscv.cv.simd.insert.h(i32 %1, i32 %b, i32 1)
   ret i32 %2
 }

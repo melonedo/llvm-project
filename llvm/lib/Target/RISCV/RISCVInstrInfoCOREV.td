@@ -158,6 +158,11 @@ class SIMDALU_ri<bits<6> funct6, bits<3> funct3, string opcodestr>
               (ins GPR:$rs1, simm6:$imm6), opcodestr, "$rd, $rs1, $imm6"> {
 }
 
+class SIMDALU_rti<bits<6> funct6, bits<3> funct3, string opcodestr>
+    : RVInstSIMDI<funct6, funct3, OPC_CUSTOM3, (outs GPR:$rd),
+              (ins GPR:$rs1, cv_tsimm6:$imm6), opcodestr, "$rd, $rs1, $imm6"> {
+}
+
 class SIMDALU_ru<bits<6> funct6, bits<3> funct3, string opcodestr>
     : SIMDALU_ri<funct6, funct3, opcodestr>;
 
@@ -215,10 +220,10 @@ let Predicates = [HasExtXCoreVSIMD, IsRV32], hasSideEffects = 0, mayLoad = 0, ma
 
   // 0b10110xx: UNDEF
 
-  def CV_EXTRACT_H :    SIMDALU_ri<0b101110, 0b000, "cv.extract.h">;
-  def CV_EXTRACT_B :    SIMDALU_ri<0b101110, 0b001, "cv.extract.b">;
-  def CV_EXTRACTU_H :   SIMDALU_ri<0b101110, 0b010, "cv.extractu.h">;
-  def CV_EXTRACTU_B :   SIMDALU_ri<0b101110, 0b011, "cv.extractu.b">;
+  def CV_EXTRACT_H :    SIMDALU_rti<0b101110, 0b000, "cv.extract.h">;
+  def CV_EXTRACT_B :    SIMDALU_rti<0b101110, 0b001, "cv.extract.b">;
+  def CV_EXTRACTU_H :   SIMDALU_rti<0b101110, 0b010, "cv.extractu.h">;
+  def CV_EXTRACTU_B :   SIMDALU_rti<0b101110, 0b011, "cv.extractu.b">;
   let Constraints = "$rd = $rd_wb" in {
     def CV_INSERT_H : RVInstSIMDI<0b101110, 0b100, OPC_CUSTOM3, (outs GPR:$rd_wb),
       (ins GPR:$rd, GPR:$rs1, cv_tsimm6:$imm6), "cv.insert.h", "$rd, $rs1, $imm6">;
@@ -228,14 +233,14 @@ let Predicates = [HasExtXCoreVSIMD, IsRV32], hasSideEffects = 0, mayLoad = 0, ma
 
   def CV_SHUFFLE_H :    SIMDALU_rr<0b110000, 0, 0b000, "cv.shuffle.h">;
   def CV_SHUFFLE_B :    SIMDALU_rr<0b110000, 0, 0b001, "cv.shuffle.b">;
-  def CV_SHUFFLE_SCI_H : SIMDALU_ri<0b110000, 0b110, "cv.shuffle.sci.h">;
-  def CV_SHUFFLEI0_SCI_B : SIMDALU_ri<0b110000, 0b111, "cv.shuffleI0.sci.b">;
+  def CV_SHUFFLE_SCI_H : SIMDALU_rti<0b110000, 0b110, "cv.shuffle.sci.h">;
+  def CV_SHUFFLEI0_SCI_B : SIMDALU_rti<0b110000, 0b111, "cv.shuffleI0.sci.b">;
 
-  def CV_SHUFFLEI1_SCI_B : SIMDALU_ri<0b110010, 0b111, "cv.shuffleI1.sci.b">;
+  def CV_SHUFFLEI1_SCI_B : SIMDALU_rti<0b110010, 0b111, "cv.shuffleI1.sci.b">;
 
-  def CV_SHUFFLEI2_SCI_B : SIMDALU_ri<0b110100, 0b111, "cv.shuffleI2.sci.b">;
+  def CV_SHUFFLEI2_SCI_B : SIMDALU_rti<0b110100, 0b111, "cv.shuffleI2.sci.b">;
 
-  def CV_SHUFFLEI3_SCI_B : SIMDALU_ri<0b110110, 0b111, "cv.shuffleI3.sci.b">;
+  def CV_SHUFFLEI3_SCI_B : SIMDALU_rti<0b110110, 0b111, "cv.shuffleI3.sci.b">;
 
   def CV_SHUFFLE2_H :    SIMDALU_rr<0b111000, 0, 0b000, "cv.shuffle2.h">;
   def CV_SHUFFLE2_B :    SIMDALU_rr<0b111000, 0, 0b001, "cv.shuffle2.b">;
@@ -800,21 +805,30 @@ let Predicates = [HasExtXCoreVMem] in {
 //===----------------------------------------------------------------------===//
 
 class PatCorevGprGpr <string intr, string asm> :
-  PatGprGpr<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGprGpr<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm)>;
 
+class PatCorevGprTImm <string intr, string asm> :
+  PatGprImm<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
+            !cast<RVInst>("CV_" # asm), cv_tsimm6>;
+
 class PatCorevGprImm <string intr, string asm> :
-  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGprImm<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm), simm6>;
 
 // TODO: define uimm6
 class PatCorevGprUImm <string intr, string asm> :
-  PatGprImm<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGprImm<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm), simm6>;
 
 multiclass PatCorevGprGprHB <string intr> {
   def : PatCorevGprGpr<intr # "_h", NAME # "_H">;
   def : PatCorevGprGpr<intr # "_b", NAME # "_B">;
+}
+
+multiclass PatCorevGprTImmHB <string intr> {
+  def : PatCorevGprTImm<intr # "_h", NAME # "_H">;
+  def : PatCorevGprTImm<intr # "_b", NAME # "_B">;
 }
 
 multiclass PatCorevGprImmHB <string intr> {
@@ -828,7 +842,7 @@ multiclass PatCorevGprUImmHB <string intr> {
 }
 
 class PatCorevGprGprDiv <Intrinsic intr, string asm, int div> : 
-  Pat<(intr GPR:$rd, GPR:$rs1, div),
+  Pat<(intr GPR:$rd, GPR:$rs1, (i32 div)),
       (!cast<RVInst>("CV_" # asm) GPR:$rd, GPR:$rs1)>;
 
 multiclass PatCorevGprGprDivAll <string intr> {
@@ -844,7 +858,7 @@ multiclass PatCorevGprGprDivAll2 <Intrinsic intr> {
 }
 
 class PatCorevGpr <string intr, string asm> :
-  PatGpr<!cast<Intrinsic>("int_riscv_cv_" # intr), 
+  PatGpr<!cast<Intrinsic>("int_riscv_cv_simd_" # intr), 
             !cast<RVInst>("CV_" # asm)>;
 
 multiclass PatCorevGprHB <string intr> {
@@ -871,9 +885,9 @@ multiclass PatCorevBinaryUnsigned <string intr> {
 
 let Predicates = [HasExtXCoreVSIMD, IsRV32] in {
   defm ADD :  PatCorevBinary<"add", true>;
-  def : PatCorevGprGprDiv<int_riscv_cv_add_h, "ADD_H", 1>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_add_h, "ADD_H", 1>;
   defm SUB :  PatCorevBinary<"sub", true>;
-  def : PatCorevGprGprDiv<int_riscv_cv_sub_h, "SUB_H", 1>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_sub_h, "SUB_H", 1>;
   defm AVG :  PatCorevBinary<"avg">;
   defm AVGU : PatCorevBinary<"avgu">;
   defm MIN :  PatCorevBinary<"min">;
@@ -896,26 +910,26 @@ let Predicates = [HasExtXCoreVSIMD, IsRV32] in {
   defm SDOTUSP : PatCorevBinary<"sdotusp">;
   defm SDOTSP :  PatCorevBinary<"sdotsp">;
 
-  defm EXTRACT :  PatCorevGprImmHB<"extract">;
-  defm EXTRACTU : PatCorevGprImmHB<"extractu">;
-  def : Pat<(int_riscv_cv_insert_b GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
+  defm EXTRACT :  PatCorevGprTImmHB<"extract">;
+  defm EXTRACTU : PatCorevGprTImmHB<"extractu">;
+  def : Pat<(int_riscv_cv_simd_insert_b GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
             (CV_INSERT_B GPR:$rd, GPR:$rs1, cv_tsimm6:$imm)>;
-  def : Pat<(int_riscv_cv_insert_h GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
+  def : Pat<(int_riscv_cv_simd_insert_h GPR:$rd, GPR:$rs1, cv_tsimm6:$imm), 
             (CV_INSERT_H GPR:$rd, GPR:$rs1, cv_tsimm6:$imm)>;
 
   defm SHUFFLE : PatCorevGprGprHB<"shuffle">;
-  def : PatCorevGprImm<"shuffle_sci_h", "SHUFFLE_SCI_H">;
-  def : PatCorevGprImm<"shuffleI0_sci_b", "SHUFFLEI0_SCI_B">;
-  def : PatCorevGprImm<"shuffleI1_sci_b", "SHUFFLEI1_SCI_B">;
-  def : PatCorevGprImm<"shuffleI2_sci_b", "SHUFFLEI2_SCI_B">;
-  def : PatCorevGprImm<"shuffleI3_sci_b", "SHUFFLEI3_SCI_B">;
+  def : PatCorevGprTImm<"shuffle_sci_h", "SHUFFLE_SCI_H">;
+  def : PatCorevGprTImm<"shuffleI0_sci_b", "SHUFFLEI0_SCI_B">;
+  def : PatCorevGprTImm<"shuffleI1_sci_b", "SHUFFLEI1_SCI_B">;
+  def : PatCorevGprTImm<"shuffleI2_sci_b", "SHUFFLEI2_SCI_B">;
+  def : PatCorevGprTImm<"shuffleI3_sci_b", "SHUFFLEI3_SCI_B">;
   defm SHUFFLE2 : PatCorevGprGprHB<"shuffle2">;
 
   def : PatCorevGprGpr<"pack", "PACK">;
   def : PatCorevGprGpr<"pack_h", "PACK_H">;
-  def : Pat<(int_riscv_cv_packhi_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
+  def : Pat<(int_riscv_cv_simd_packhi_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
             (CV_PACKHI_B GPR:$rd, GPR:$rs1, GPR:$rs2)>;
-  def : Pat<(int_riscv_cv_packlo_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
+  def : Pat<(int_riscv_cv_simd_packlo_b GPR:$rd, GPR:$rs1, GPR:$rs2), 
             (CV_PACKLO_B GPR:$rd, GPR:$rs1, GPR:$rs2)>;
 
   defm CMPEQ :  PatCorevBinary<"cmpeq">;
@@ -929,18 +943,18 @@ let Predicates = [HasExtXCoreVSIMD, IsRV32] in {
   defm CMPLTU : PatCorevBinary<"cmpltu">;
   defm CMPLEU : PatCorevBinary<"cmpleu">;
   
-  def : PatCorevGprGprDiv<int_riscv_cv_cplxmul_r, "CPLXMUL_R", 1>;
-  defm CPLXMUL_R : PatCorevGprGprDivAll2<int_riscv_cv_cplxmul_r>;
-  def : PatCorevGprGprDiv<int_riscv_cv_cplxmul_i, "CPLXMUL_I", 1>;
-  defm CPLXMUL_I : PatCorevGprGprDivAll2<int_riscv_cv_cplxmul_i>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_cplxmul_r, "CPLXMUL_R", 1>;
+  defm CPLXMUL_R : PatCorevGprGprDivAll2<int_riscv_cv_simd_cplxmul_r>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_cplxmul_i, "CPLXMUL_I", 1>;
+  defm CPLXMUL_I : PatCorevGprGprDivAll2<int_riscv_cv_simd_cplxmul_i>;
 
   def : PatCorevGpr<"cplxconj", "CPLXCONJ">;
 
-  def : PatCorevGprGprDiv<int_riscv_cv_subrotmj, "SUBROTMJ", 1>;
-  defm SUBROTMJ : PatCorevGprGprDivAll2<int_riscv_cv_subrotmj>;
+  def : PatCorevGprGprDiv<int_riscv_cv_simd_subrotmj, "SUBROTMJ", 1>;
+  defm SUBROTMJ : PatCorevGprGprDivAll2<int_riscv_cv_simd_subrotmj>;
 
-  defm ADD : PatCorevGprGprDivAll2<int_riscv_cv_add_h>;
-  defm SUB : PatCorevGprGprDivAll2<int_riscv_cv_sub_h>;
+  defm ADD : PatCorevGprGprDivAll2<int_riscv_cv_simd_add_h>;
+  defm SUB : PatCorevGprGprDivAll2<int_riscv_cv_simd_sub_h>;
 }
 
 //===----------------------------------------------------------------------===//

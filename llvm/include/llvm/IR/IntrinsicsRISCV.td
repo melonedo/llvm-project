@@ -1591,6 +1591,10 @@ class ScalarCoreVSimdGprGprIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
 
+class ScalarCoreVSimdGprImmIntrinsic
+    : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty],
+                [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<1>>]>;
+
 class ScalarCoreVSimdGprGprGprIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable]>;
@@ -1599,35 +1603,30 @@ class ScalarCoreVSimdGprGprImmIntrinsic
     : Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
                 [IntrNoMem, IntrWillReturn, IntrSpeculatable, ImmArg<ArgIndex<2>>]>;
 
-// Setting immarg will make LLVM classify the argument as TargetConstant,
-// preventing conditional selection.
-class ScalarCoreVSimdGprImmIntrinsic
-    : ScalarCoreVSimdGprGprIntrinsic;
-
 multiclass ScalarCoreVSimdGprIntrinsicHB {
-  def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprIntrinsic;
-  def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _h : ScalarCoreVSimdGprIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _b : ScalarCoreVSimdGprIntrinsic;
 }
 
 multiclass ScalarCoreVSimdGprGprIntrinsicHB {
-  def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprGprIntrinsic;
-  def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _h : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic;
 }
 
 multiclass ScalarCoreVSimdGprGprIntrinsicDiv {
-  def int_riscv_cv_ # NAME # _div2 : ScalarCoreVSimdGprGprIntrinsic;
-  def int_riscv_cv_ # NAME # _div4 : ScalarCoreVSimdGprGprIntrinsic;
-  def int_riscv_cv_ # NAME # _div8 : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _div2 : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _div4 : ScalarCoreVSimdGprGprIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _div8 : ScalarCoreVSimdGprGprIntrinsic;
 }
 
 multiclass ScalarCoreVSimdGprImmIntrinsicHB {
-  def int_riscv_cv_ # NAME # _h : ScalarCoreVSimdGprImmIntrinsic;
-  def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprImmIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _h : ScalarCoreVSimdGprImmIntrinsic;
+  def int_riscv_cv_simd_ # NAME # _b : ScalarCoreVSimdGprImmIntrinsic;
 }
 
 multiclass CoreVSimdBinary <bit exclude_h = false> {
   if exclude_h then {
-    def int_riscv_cv_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic;
+    def int_riscv_cv_simd_ # NAME # _b : ScalarCoreVSimdGprGprIntrinsic;
   } else {
     defm NAME : ScalarCoreVSimdGprGprIntrinsicHB;
   }
@@ -1636,9 +1635,9 @@ multiclass CoreVSimdBinary <bit exclude_h = false> {
 
 let TargetPrefix = "riscv" in {
 defm add : CoreVSimdBinary<true>;
-def int_riscv_cv_add_h : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_simd_add_h : ScalarCoreVSimdGprGprImmIntrinsic;
 defm sub : CoreVSimdBinary<true>;
-def int_riscv_cv_sub_h : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_simd_sub_h : ScalarCoreVSimdGprGprImmIntrinsic;
 defm avg : CoreVSimdBinary;
 defm avgu : CoreVSimdBinary;
 defm min : CoreVSimdBinary;
@@ -1663,22 +1662,22 @@ defm sdotsp : CoreVSimdBinary;
 
 defm extract : ScalarCoreVSimdGprImmIntrinsicHB;
 defm extractu : ScalarCoreVSimdGprImmIntrinsicHB;
-def int_riscv_cv_insert_b : ScalarCoreVSimdGprGprImmIntrinsic;
-def int_riscv_cv_insert_h : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_simd_insert_b : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_simd_insert_h : ScalarCoreVSimdGprGprImmIntrinsic;
 
 
 defm shuffle : ScalarCoreVSimdGprGprIntrinsicHB;
-def int_riscv_cv_shuffle_sci_h : ScalarCoreVSimdGprImmIntrinsic;
-def int_riscv_cv_shuffleI0_sci_b : ScalarCoreVSimdGprImmIntrinsic;
-def int_riscv_cv_shuffleI1_sci_b : ScalarCoreVSimdGprImmIntrinsic;
-def int_riscv_cv_shuffleI2_sci_b : ScalarCoreVSimdGprImmIntrinsic;
-def int_riscv_cv_shuffleI3_sci_b : ScalarCoreVSimdGprImmIntrinsic;
+def int_riscv_cv_simd_shuffle_sci_h : ScalarCoreVSimdGprImmIntrinsic;
+def int_riscv_cv_simd_shuffleI0_sci_b : ScalarCoreVSimdGprImmIntrinsic;
+def int_riscv_cv_simd_shuffleI1_sci_b : ScalarCoreVSimdGprImmIntrinsic;
+def int_riscv_cv_simd_shuffleI2_sci_b : ScalarCoreVSimdGprImmIntrinsic;
+def int_riscv_cv_simd_shuffleI3_sci_b : ScalarCoreVSimdGprImmIntrinsic;
 defm shuffle2 : ScalarCoreVSimdGprGprIntrinsicHB;
 
-def int_riscv_cv_pack : ScalarCoreVSimdGprGprIntrinsic;
-def int_riscv_cv_pack_h : ScalarCoreVSimdGprGprIntrinsic;
-def int_riscv_cv_packhi_b : ScalarCoreVSimdGprGprGprIntrinsic;
-def int_riscv_cv_packlo_b : ScalarCoreVSimdGprGprGprIntrinsic;
+def int_riscv_cv_simd_pack : ScalarCoreVSimdGprGprIntrinsic;
+def int_riscv_cv_simd_pack_h : ScalarCoreVSimdGprGprIntrinsic;
+def int_riscv_cv_simd_packhi_b : ScalarCoreVSimdGprGprGprIntrinsic;
+def int_riscv_cv_simd_packlo_b : ScalarCoreVSimdGprGprGprIntrinsic;
 
 defm cmpeq : CoreVSimdBinary;
 defm cmpne : CoreVSimdBinary;
@@ -1691,10 +1690,10 @@ defm cmpgeu : CoreVSimdBinary;
 defm cmpltu : CoreVSimdBinary;
 defm cmpleu : CoreVSimdBinary;
 
-def int_riscv_cv_cplxmul_r : ScalarCoreVSimdGprGprImmIntrinsic;
-def int_riscv_cv_cplxmul_i : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_simd_cplxmul_r : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_simd_cplxmul_i : ScalarCoreVSimdGprGprImmIntrinsic;
 
-def int_riscv_cv_cplxconj : ScalarCoreVSimdGprIntrinsic;
+def int_riscv_cv_simd_cplxconj : ScalarCoreVSimdGprIntrinsic;
 
-def int_riscv_cv_subrotmj : ScalarCoreVSimdGprGprImmIntrinsic;
+def int_riscv_cv_simd_subrotmj : ScalarCoreVSimdGprGprImmIntrinsic;
 } // TargetPrefix = "riscv"
