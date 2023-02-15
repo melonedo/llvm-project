@@ -1,4 +1,4 @@
-; RUN: llc -O0 -mtriple=riscv32 -mattr=+m -mattr=+xcorevsimd -verify-machineinstrs < %s \
+; RUN: llc -O0 -mtriple=riscv32 -mattr=+m -mattr=+xcvsimd -verify-machineinstrs < %s \
 ; RUN:   | FileCheck %s
 
 declare i32 @llvm.riscv.cv.simd.add.h(i32, i32, i32)
