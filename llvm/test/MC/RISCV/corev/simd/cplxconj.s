@@ -1,5 +1,9 @@
-# RUN: llvm-mc -triple=riscv32 --mattr=+xcorevsimd -show-encoding %s \
+# RUN: llvm-mc -triple=riscv32 --mattr=+xcvsimd -show-encoding %s \
 # RUN:        | FileCheck %s --check-prefixes=CHECK-ENCODING,CHECK-INSTR
+
+//===----------------------------------------------------------------------===//
+// cv.cplxconj
+//===----------------------------------------------------------------------===//
 
 cv.cplxconj t0, t1
 # CHECK-INSTR: cv.cplxconj t0, t1
